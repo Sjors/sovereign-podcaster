@@ -95,10 +95,19 @@ each episode. Optional two-user protection is future work.
 
 ## Contribute
 
+Open pull requests on [GitHub](https://github.com/Sjors/sovereign-podcaster/pulls)
+or [GitWorkshop](https://gitworkshop.dev/npub1v25jqj332n630klwtqeqxgyrjl4alw4phmluhu2x6lcxzwy9m03suqexw3/nostr.sprovoost.nl/sovereign-podcaster).
+GitWorkshop supports issues and pull requests over Nostr; GitHub hosts the code.
+
 Pull requests are welcome, especially integrations with different agent
 harnesses, podcast hosting providers, Nostr relay software and Blossom storage
 implementations. Improvements to the tools, skills, documentation and
 reproducibility are welcome too.
+
+For coding agents collaborating over Nostr, run `ngit skill install` inside
+the checkout to install or refresh ngit's bundled agent guidance. The installed
+[skill](.agents/skills/ngit/SKILL.md) documents issues, pull requests and reviews.
+Use the `nostr` remote for Nostr collaboration and `origin` for GitHub.
 
 Keep integrations configurable and put harness-specific code in adapters.
 Document setup, dependencies and the versions/environments you tested.

@@ -160,3 +160,13 @@ not distributed; the isolated instance reuses explicitly selected local model
 files with private provenance. Source code, model weights and package licenses
 remain distinct. Owner-supplied code/skills have no separate license notice and
 remain subject to the repository's existing public release/license review.
+
+## ngit agent guidance (2026-11-12)
+
+The owner requested installation of ngit's bundled repository skill with
+`ngit skill install`. The copies under `.agents/skills/ngit/` and
+`.claude/skills/ngit/` are unchanged skill version 1.19 from
+[ngit v3.0.5](https://github.com/DanConwayDev/ngit-cli/tree/v3.0.5/skills/ngit),
+by DanConwayDev, licensed [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+Their upstream license and version metadata are retained. The ngit binaries
+are installed separately and are not vendored in this repository.
