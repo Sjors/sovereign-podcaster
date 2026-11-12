@@ -342,6 +342,28 @@ class YoutubeTests(unittest.TestCase):
         self.service=Mock();self.service.videos().insert.return_value=types.SimpleNamespace(uri='https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable',body='{}',headers={'Content-Type':'application/json'})
     def response(self,status,**headers):return type('Response',(dict,),{'status':status})(headers)
 
+    def test_caption_polling_binds_video_and_waits_for_nonempty_download_without_reinsertion(self):
+        captions=self.root/'reviewed.vtt';captions.write_text('WEBVTT\n\n00:00:00.000 --> 00:00:02.000\nReviewed words.\n')
+        self.packet['files']['captions']=e.file_record(captions)
+        name='sovereign-podcaster-'+self.packet['files']['captions']['sha256'][:20]
+        calls=[]
+        def listed(**params):
+            self.assertEqual(params['videoId'],'same-video');calls.append(params)
+            status='syncing' if len(calls)==1 else 'serving'
+            track=dict(id='same-caption',snippet=dict(name=name,language='en',status=status))
+            return types.SimpleNamespace(execute=lambda **kw:dict(items=[track]))
+        service=Mock();service.captions().list.side_effect=listed
+        downloads=[b'WEBVTT\n\n',captions.read_bytes()]
+        service.captions().download.side_effect=lambda **kw:types.SimpleNamespace(execute=lambda **opts:downloads.pop(0))
+        folder=self.root/'captions';folder.mkdir()
+        with patch.object(youtube.time,'sleep'):
+            track=youtube.caption_ready(service,'same-video',self.packet,folder,lambda:None)
+        self.assertEqual(track['id'],'same-caption');self.assertEqual(e.read(folder/'caption.json')['phase'],'verified')
+        service.captions().insert.assert_not_called();service.captions().update.assert_not_called()
+        self.assertEqual(service.captions().download.call_count,2)
+        service.captions().download.side_effect=lambda **kw:types.SimpleNamespace(execute=lambda **opts:b'WEBVTT\n\n00:00:00.000 --> 00:00:02.000\nWrong words.\n')
+        with self.assertRaisesRegex(ValueError,'reviewed words/timing'):youtube.caption_ready(service,'same-video',self.packet,folder,lambda:None)
+
     def test_resumable_lost_final_response_recovers_same_video_without_second_insert(self):
         self.service._http.request.side_effect=[(self.response(200,location='https://www.googleapis.com/upload/youtube/v3/videos?upload_id=private'),b''),RuntimeError('lost PUT')]
         with self.assertRaisesRegex(RuntimeError,'uncertain'):youtube.resumable(self.service,self.packet,self.root,{},lambda:None)

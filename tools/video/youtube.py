@@ -138,6 +138,7 @@ def wait_processed(service,video_id,packet,check):
 
 def caption_ready(service,video_id,packet,folder,check,allow_update=False):
     from googleapiclient.http import MediaFileUpload
+    expected=caption_entries(Path(packet['files']['captions']['path']).read_bytes())
     name='sovereign-podcaster-'+packet['files']['captions']['sha256'][:20];language=packet['metadata']['language'];path=folder/'caption.json'
     items=service.captions().list(part='snippet',videoId=video_id).execute(num_retries=2).get('items',[])
     matches=[x for x in items if (x['id']==packet['reuse_caption_id'] if packet.get('reuse_caption_id') else x['snippet'].get('name')==name and x['snippet'].get('language')==language)]
@@ -157,7 +158,7 @@ def caption_ready(service,video_id,packet,folder,check,allow_update=False):
             check();e.save(path,dict(phase='updating',id=track['id'],source=packet['files']['captions']))
             try:service.captions().update(part='id',body={'id':track['id']},media_body=MediaFileUpload(packet['files']['captions']['path'],mimetype='text/vtt',resumable=False)).execute(num_retries=0)
             except Exception:raise RuntimeError('Caption replacement outcome uncertain; resume the same track ID') from None
-            found=service.captions().list(part='snippet',id=track['id']).execute(num_retries=2).get('items',[])
+            found=service.captions().list(part='snippet',videoId=video_id,id=track['id']).execute(num_retries=2).get('items',[])
             if len(found)!=1:raise ValueError('Updated caption track missing')
             track=found[0]
     if track['snippet'].get('status')=='failed':raise RuntimeError('YouTube caption processing failed')
@@ -166,11 +167,16 @@ def caption_ready(service,video_id,packet,folder,check,allow_update=False):
         if track['snippet'].get('status')=='failed':raise RuntimeError('YouTube caption processing failed')
         if time.monotonic()>=deadline:raise RuntimeError('YouTube captions processing deadline reached; resume later')
         check();time.sleep(10)
-        listed=service.captions().list(part='snippet',id=track['id']).execute(num_retries=2).get('items',[])
+        listed=service.captions().list(part='snippet',videoId=video_id,id=track['id']).execute(num_retries=2).get('items',[])
         if len(listed)!=1:raise ValueError('Caption track disappeared during processing')
         track=listed[0]
-    downloaded=service.captions().download(id=track['id'],tfmt='vtt').execute(num_retries=2)
-    expected=caption_entries(Path(packet['files']['captions']['path']).read_bytes());actual=caption_entries(downloaded)
+    for attempt in range(4):
+        check()
+        downloaded=service.captions().download(id=track['id'],tfmt='vtt').execute(num_retries=2)
+        try:actual=caption_entries(downloaded);break
+        except ValueError:
+            if attempt==3:raise RuntimeError('YouTube caption download is not ready; preserve the same video and caption IDs') from None
+            time.sleep(5)
     if len(expected)!=len(actual) or any(a['text']!=b['text'] or abs(a['start']-b['start'])>.05 or abs(a['end']-b['end'])>.05 for a,b in zip(expected,actual)):raise ValueError('Caption download differs from the reviewed words/timing')
     track=dict(track,verified_cues_sha256=e.digest(actual))
     e.save(path,dict(phase='verified',id=track['id'],name=name,source=packet['files']['captions'],readback=track))
