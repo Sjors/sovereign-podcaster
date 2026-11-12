@@ -1,0 +1,4 @@
+interface:
+  display_name: "Podcast transcription"
+  short_description: "Review podcast wording, speakers and timed captions"
+  default_prompt: "Use $podcast-transcription to review a timed transcript against its existing episode audio."

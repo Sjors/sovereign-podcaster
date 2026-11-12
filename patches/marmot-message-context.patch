@@ -1,0 +1,681 @@
+diff --git a/integrations/claude/marmot/src/claude.rs b/integrations/claude/marmot/src/claude.rs
+index 0d04bb4..051d435 100644
+--- a/integrations/claude/marmot/src/claude.rs
++++ b/integrations/claude/marmot/src/claude.rs
+@@ -617,10 +617,12 @@ printf '{"type":"result","subtype":"success","is_error":false,"result":"reply: %
+         let context = marmot_terminal_harness::GroupProfileContext {
+             socket: root.path().join("test.sock"),
+             auth_token: Some("test-token".into()),
+             account_id_hex: "test-account".into(),
+             group_id_hex: "test-group".into(),
++            message_id_hex: "fixture-message".to_owned(),
++            sender_account_id_hex: "fixture-sender".to_owned(),
+             request_timeout: Duration::from_secs(30),
+         };
+         let outcome = marmot_terminal_harness::with_group_profile_context(
+             context,
+             run_with_bin(
+diff --git a/integrations/codex/marmot/src/codex.rs b/integrations/codex/marmot/src/codex.rs
+index 16f2e8b..b02f98e 100644
+--- a/integrations/codex/marmot/src/codex.rs
++++ b/integrations/codex/marmot/src/codex.rs
+@@ -532,10 +532,11 @@ fn parse_event_line(line: &str) -> serde_json::Result<ParsedEvent> {
+                 .and_then(Value::as_str)
+                 .filter(|text| !text.trim().is_empty())
+                 .map(|text| ParsedEvent::Text(text.to_owned()))
+                 .unwrap_or(ParsedEvent::Ignored))
+         }
++        Some("adapter.silent") => Ok(ParsedEvent::Silent),
+         Some("turn.failed") => Ok(ParsedEvent::Error {
+             session_id: None,
+             summary: "turn_failed".to_owned(),
+         }),
+         Some("error") => Ok(ParsedEvent::Error {
+@@ -1270,10 +1271,25 @@ printf '%s\n' '{"type":"item.completed","item":{"type":"agent_message","text":"f
+         let batch_path = batch.path().to_path_buf();
+         drop(batch);
+         assert!(!batch_path.exists());
+     }
+ 
++    #[test]
++    fn parser_requires_an_explicit_silent_event() {
++        assert_eq!(
++            parse_event_line(r#"{"type":"adapter.silent"}"#).unwrap(),
++            ParsedEvent::Silent
++        );
++        assert_eq!(
++            parse_event_line(
++                r#"{"type":"item.completed","item":{"type":"agent_message","text":""}}"#
++            )
++            .unwrap(),
++            ParsedEvent::Ignored
++        );
++    }
++
+     #[test]
+     fn parser_emits_thread_and_completed_agent_messages_only() {
+         assert_eq!(
+             parse_event_line(r#"{"type":"thread.started","thread_id":"thread-123"}"#).unwrap(),
+             ParsedEvent::Session("thread-123".to_owned())
+@@ -1340,10 +1356,12 @@ printf '%s\n' '{"type":"turn.completed","usage":{"input_tokens":1,"output_tokens
+         let context = marmot_terminal_harness::GroupProfileContext {
+             socket: root.path().join("test.sock"),
+             auth_token: Some("test-token".into()),
+             account_id_hex: "test-account".into(),
+             group_id_hex: "test-group".into(),
++            message_id_hex: "fixture-message".to_owned(),
++            sender_account_id_hex: "fixture-sender".to_owned(),
+             request_timeout: Duration::from_secs(30),
+         };
+         let outcome = marmot_terminal_harness::with_group_profile_context(
+             context,
+             run_with_bin(
+diff --git a/integrations/opencode/marmot/src/opencode.rs b/integrations/opencode/marmot/src/opencode.rs
+index 664a1e4..042bda3 100644
+--- a/integrations/opencode/marmot/src/opencode.rs
++++ b/integrations/opencode/marmot/src/opencode.rs
+@@ -331,10 +331,12 @@ printf '%s\n' '{"type":"text","sessionID":"ses_control","part":{"type":"text","t
+         let context = marmot_terminal_harness::GroupProfileContext {
+             socket: root.path().join("test.sock"),
+             auth_token: Some("test-token".into()),
+             account_id_hex: "test-account".into(),
+             group_id_hex: "test-group".into(),
++            message_id_hex: "fixture-message".to_owned(),
++            sender_account_id_hex: "fixture-sender".to_owned(),
+             request_timeout: Duration::from_secs(30),
+         };
+         let (tx, mut rx) = mpsc::channel(4);
+         let outcome = marmot_terminal_harness::with_group_profile_context(
+             context,
+diff --git a/integrations/pi/marmot/src/pi.rs b/integrations/pi/marmot/src/pi.rs
+index 2d827d8..31ef359 100644
+--- a/integrations/pi/marmot/src/pi.rs
++++ b/integrations/pi/marmot/src/pi.rs
+@@ -485,10 +485,12 @@ printf '{"type":"message_end","message":{"role":"assistant","content":[{"type":"
+         let context = marmot_terminal_harness::GroupProfileContext {
+             socket: root.path().join("test.sock"),
+             auth_token: Some("test-token".into()),
+             account_id_hex: "test-account".into(),
+             group_id_hex: "test-group".into(),
++            message_id_hex: "fixture-message".to_owned(),
++            sender_account_id_hex: "fixture-sender".to_owned(),
+             request_timeout: Duration::from_secs(30),
+         };
+         let outcome = marmot_terminal_harness::with_group_profile_context(
+             context,
+             run_with_bin(
+diff --git a/integrations/terminal-harness/src/bridge.rs b/integrations/terminal-harness/src/bridge.rs
+index 18ca67f..b803000 100644
+--- a/integrations/terminal-harness/src/bridge.rs
++++ b/integrations/terminal-harness/src/bridge.rs
+@@ -401,51 +401,53 @@ async fn dispatch_event(ctx: Arc<BridgeContext>, event: AgentControlEvent) -> Di
+ 
+             let inbound = InboundPrompt {
+                 account_ref: account_id_hex,
+                 group_ref: group_id_hex,
+                 message_ref: message.message_id_hex,
++                sender_ref,
+                 text: message.text,
+                 media: message.media,
+             };
+             tokio::spawn(handle_message(ctx, inbound, permit));
+             DispatchOutcome::Continue
+         }
+         AgentControlEvent::GroupInvite { .. } => {
+             info!(
+                 target: TRACE_TARGET,
+                 method = "dispatch_event",
+                 event = "group_invite",
+                 "group invite observed"
+             );
+             DispatchOutcome::Continue
+         }
+         AgentControlEvent::ResyncRequired { dropped_events, .. } => {
+             warn!(
+                 target: TRACE_TARGET,
+                 method = "dispatch_event",
+                 event = "resync_required",
+                 dropped_events,
+                 "inbound event resync required; reconnecting subscription"
+             );
+             DispatchOutcome::Reconnect
+         }
+         _ => {
+             debug!(
+                 target: TRACE_TARGET,
+                 method = "dispatch_event",
+                 event = "ignored",
+                 "ignoring unsupported event"
+             );
+             DispatchOutcome::Continue
+         }
+     }
+ }
+ 
+ struct InboundPrompt {
+     account_ref: String,
+     group_ref: String,
+     message_ref: String,
++    sender_ref: String,
+     text: String,
+     media: Vec<AgentControlMediaRef>,
+ }
+ 
+ #[derive(Debug, PartialEq, Eq)]
+@@ -855,30 +857,33 @@ async fn handle_message(ctx: Arc<BridgeContext>, inbound: InboundPrompt, mut per
+     let control_context = crate::GroupProfileContext {
+         socket: ctx.cfg.socket.clone(),
+         auth_token: ctx.cfg.auth_token.clone(),
+         account_id_hex: inbound.account_ref.clone(),
+         group_id_hex: inbound.group_ref.clone(),
++        message_id_hex: inbound.message_ref.clone(),
++        sender_account_id_hex: inbound.sender_ref.clone(),
+         request_timeout: ctx.cfg.request_timeout,
+     };
+     let mut runner = tokio::spawn(async move {
+         // The staging lease lives in the backend task so its paths cannot
+         // disappear while that task still has access to them.
+         let _attachment_batch = attachment_batch;
+         crate::with_group_profile_context(
+             control_context,
+             backend.run_with_attachments(invocation, attachments, tx),
+         )
+         .await
+     });
+     // Dropping a JoinHandle detaches its task. Abort explicitly when this
+     // message handler is cancelled so the task drops its staging lease too.
+     let _runner_abort = AbortBackendOnDrop(runner.abort_handle());
+     let mut buffered_text = Vec::new();
+     let mut artifact_outputs: Vec<ArtifactOutput> = Vec::new();
+     let mut artifact_declaration_failed = false;
+     let mut chunk_index = 0usize;
+     let mut delivered_chunks = 0usize;
++    let mut silent = false;
+     let mut delivery_failed = false;
+     let mut persist_failed = false;
+     let mut turn_output = TurnOutput::default();
+     let mut output_limit_exceeded = false;
+     let mut finished_run = None;
+@@ -960,10 +965,11 @@ async fn handle_message(ctx: Arc<BridgeContext>, inbound: InboundPrompt, mut per
+                     warn!(target: TRACE_TARGET, method = "liveness_status", error_kind = err.privacy_safe_kind(), "failed to send liveness status");
+                 }
+             }
+             RunnerEvent::Artifacts(outputs) => artifact_outputs.extend(outputs),
+             RunnerEvent::ArtifactDeclarationFailed => artifact_declaration_failed = true,
++            RunnerEvent::Silent => silent = true,
+         }
+     }
+ 
+     // The joined artifact caption is split again on delivery, so charge it too.
+     if buffer_text_for_artifacts
+@@ -1094,10 +1100,11 @@ async fn handle_message(ctx: Arc<BridgeContext>, inbound: InboundPrompt, mut per
+                 cwd,
+                 recovery_prompt,
+                 outcome,
+                 DeliveryReport {
+                     chunk_count: terminal_delivery_count,
++                    silent,
+                     failed: delivery_failed,
+                     persist_failed,
+                     status_chunk_index: chunk_index + 1,
+                 },
+             )
+@@ -2113,32 +2120,33 @@ async fn finish_success(
+     }
+ }
+ 
+ struct DeliveryReport {
+     chunk_count: usize,
++    silent: bool,
+     failed: bool,
+     persist_failed: bool,
+     status_chunk_index: usize,
+ }
+ 
+ #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+ enum CompletionRoute {
+     NonzeroExit,
+     IncompleteFinal,
+     TextFinalAckUnknown,
+     NoText,
+     Complete,
+ }
+ 
+ fn completion_route(outcome: &Outcome, delivery: &DeliveryReport) -> CompletionRoute {
+     if outcome.exit_code != Some(0) {
+         CompletionRoute::NonzeroExit
+     } else if delivery.persist_failed {
+         CompletionRoute::IncompleteFinal
+     } else if delivery.failed {
+         CompletionRoute::TextFinalAckUnknown
+-    } else if delivery.chunk_count == 0 {
++    } else if delivery.chunk_count == 0 && !(delivery.silent && outcome.error_summary.is_none()) {
+         CompletionRoute::NoText
+     } else {
+         CompletionRoute::Complete
+     }
+ }
+@@ -3437,10 +3445,11 @@ mod tests {
+             ctx,
+             InboundPrompt {
+                 account_ref: "account".to_owned(),
+                 group_ref: "group".to_owned(),
+                 message_ref: "message".to_owned(),
++                sender_ref: "fixture-sender".to_owned(),
+                 text: "create artifacts".to_owned(),
+                 media: Vec::new(),
+             },
+             permit,
+         )
+@@ -3592,10 +3601,11 @@ mod tests {
+             ctx,
+             InboundPrompt {
+                 account_ref: "account".to_owned(),
+                 group_ref: "group".to_owned(),
+                 message_ref: message_ref.to_owned(),
++                sender_ref: "fixture-sender".to_owned(),
+                 text: text.to_owned(),
+                 media,
+             },
+             permit,
+         )
+@@ -4408,10 +4418,11 @@ mod tests {
+             ctx,
+             InboundPrompt {
+                 account_ref: "account".to_owned(),
+                 group_ref: "group".to_owned(),
+                 message_ref: "message".to_owned(),
++                sender_ref: "fixture-sender".to_owned(),
+                 text: "complete then fail".to_owned(),
+                 media: Vec::new(),
+             },
+             permit,
+         )
+@@ -4862,10 +4873,11 @@ mod tests {
+             ctx.clone(),
+             InboundPrompt {
+                 account_ref: "account".to_owned(),
+                 group_ref: "group".to_owned(),
+                 message_ref: "message".to_owned(),
++                sender_ref: "fixture-sender".to_owned(),
+                 text: "create artifact".to_owned(),
+                 media: Vec::new(),
+             },
+             permit,
+         )
+@@ -5014,10 +5026,11 @@ mod tests {
+             ctx.clone(),
+             InboundPrompt {
+                 account_ref: "account".to_owned(),
+                 group_ref: "group".to_owned(),
+                 message_ref: "message".to_owned(),
++                sender_ref: "fixture-sender".to_owned(),
+                 text: "create artifact".to_owned(),
+                 media: Vec::new(),
+             },
+             permit,
+         )
+@@ -5232,14 +5245,66 @@ mod tests {
+             assert!(text.contains("/discard-last"));
+             assert!(!text.contains("killing the invocation"));
+         }
+     }
+ 
++    #[test]
++    fn explicit_silence_only_suppresses_successful_empty_turns() {
++        let mut delivery = DeliveryReport {
++            chunk_count: 0,
++            silent: true,
++            failed: false,
++            persist_failed: false,
++            status_chunk_index: 1,
++        };
++        let mut outcome = Outcome {
++            observed_session: Some("saved".to_owned()),
++            exit_code: Some(0),
++            error_summary: None,
++            no_side_effects_proven: false,
++            stderr: String::new(),
++            elapsed_ms: 1,
++        };
++        assert_eq!(
++            completion_route(&outcome, &delivery),
++            CompletionRoute::Complete
++        );
++        delivery.silent = false;
++        assert_eq!(
++            completion_route(&outcome, &delivery),
++            CompletionRoute::NoText
++        );
++        delivery.silent = true;
++        outcome.error_summary = Some("failed".to_owned());
++        assert_eq!(
++            completion_route(&outcome, &delivery),
++            CompletionRoute::NoText
++        );
++        outcome.exit_code = Some(1);
++        assert_eq!(
++            completion_route(&outcome, &delivery),
++            CompletionRoute::NonzeroExit
++        );
++        outcome.exit_code = Some(0);
++        delivery.persist_failed = true;
++        assert_eq!(
++            completion_route(&outcome, &delivery),
++            CompletionRoute::IncompleteFinal
++        );
++        delivery.persist_failed = false;
++        delivery.failed = true;
++        assert_eq!(
++            completion_route(&outcome, &delivery),
++            CompletionRoute::TextFinalAckUnknown
++        );
++    }
++
+     #[test]
+     fn completion_matrix_prioritizes_nonzero_recovery_over_delivery_reconciliation() {
+         let failed_delivery = DeliveryReport {
+             chunk_count: 0,
++            silent: false,
+             failed: true,
+             persist_failed: false,
+             status_chunk_index: 2,
+         };
+         let uncertain = Outcome {
+@@ -5725,10 +5790,11 @@ mod tests {
+                     stderr: String::new(),
+                     elapsed_ms: 1,
+                 },
+                 &DeliveryReport {
+                     chunk_count: 1,
++                    silent: false,
+                     failed: true,
+                     persist_failed: true,
+                     status_chunk_index: 3,
+                 },
+             ),
+diff --git a/integrations/terminal-harness/src/group_profile.rs b/integrations/terminal-harness/src/group_profile.rs
+index 95c7359..da5721c 100644
+--- a/integrations/terminal-harness/src/group_profile.rs
++++ b/integrations/terminal-harness/src/group_profile.rs
+@@ -11,31 +11,35 @@ use tokio::process::Command;
+ pub struct GroupProfileContext {
+     pub socket: PathBuf,
+     pub auth_token: Option<String>,
+     pub account_id_hex: String,
+     pub group_id_hex: String,
++    pub message_id_hex: String,
++    pub sender_account_id_hex: String,
+     pub request_timeout: Duration,
+ }
+ 
+ tokio::task_local! {
+     static CONTEXT: GroupProfileContext;
+ }
+ 
+ /// Scope the route to one backend future; never mutate the process environment.
+ pub async fn with_group_profile_context<F: Future>(
+     context: GroupProfileContext,
+     future: F,
+ ) -> F::Output {
+     CONTEXT.scope(context, future).await
+ }
+ 
+ pub(crate) fn configure_command(command: &mut Command) {
+     let _ = CONTEXT.try_with(|ctx| {
+         command
+             .env("MARMOT_AGENT_SOCKET", &ctx.socket)
+             .env("MARMOT_ACCOUNT_ID_HEX", &ctx.account_id_hex)
+             .env("MARMOT_GROUP_ID_HEX", &ctx.group_id_hex)
++            .env("MARMOT_MESSAGE_ID_HEX", &ctx.message_id_hex)
++            .env("MARMOT_SENDER_ACCOUNT_ID_HEX", &ctx.sender_account_id_hex)
+             .env(
+                 "MARMOT_GROUP_PROFILE_TIMEOUT_SECS",
+                 ctx.request_timeout.as_secs().clamp(1, 300).to_string(),
+             )
+             // Ignore the parent's token-file override; the CLI still falls back to
+diff --git a/integrations/terminal-harness/src/lib.rs b/integrations/terminal-harness/src/lib.rs
+index 3f264f1..f6d39fd 100644
+--- a/integrations/terminal-harness/src/lib.rs
++++ b/integrations/terminal-harness/src/lib.rs
+@@ -208,33 +208,36 @@ impl fmt::Debug for RunFailure {
+ }
+ 
+ /// Completed backend output forwarded to the reply collector.
+ #[derive(PartialEq, Eq)]
+ pub enum RunnerEvent {
++    /// Explicitly request no chat acknowledgement for a successful internal turn.
++    Silent,
+     /// Completed assistant text; never a thinking or tool delta.
+     Text(String),
+     /// Explicit backend-declared output artifacts; paths are never inferred from text.
+     Artifacts(Vec<ArtifactOutput>),
+     /// The backend emitted an artifact declaration that could not be validated.
+     ArtifactDeclarationFailed,
+     /// The presentation stream is idle while the backend process is still alive.
+     LivenessUnknown,
+ }
+ 
+ impl fmt::Debug for RunnerEvent {
+     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+         match self {
+             Self::Text(text) => formatter
+                 .debug_struct("Text")
+                 .field("text_len", &text.len())
+                 .finish(),
+             Self::Artifacts(artifacts) => formatter
+                 .debug_struct("Artifacts")
+                 .field("artifact_count", &artifacts.len())
+                 .finish(),
+             Self::ArtifactDeclarationFailed => formatter.write_str("ArtifactDeclarationFailed"),
+             Self::LivenessUnknown => formatter.write_str("LivenessUnknown"),
++            Self::Silent => formatter.write_str("Silent"),
+         }
+     }
+ }
+ 
+ /// Backend-specific command construction and event parsing boundary.
+diff --git a/integrations/terminal-harness/src/process.rs b/integrations/terminal-harness/src/process.rs
+index 966d0b4..857961c 100644
+--- a/integrations/terminal-harness/src/process.rs
++++ b/integrations/terminal-harness/src/process.rs
+@@ -302,65 +302,68 @@ impl fmt::Debug for ProcessSpec {
+ }
+ 
+ /// One strictly decoded backend JSONL event understood by the shared runner.
+ #[derive(PartialEq, Eq)]
+ pub enum ParsedEvent {
++    /// Explicit backend acknowledgement that a successful turn should stay quiet.
++    Silent,
+     /// A durable backend session id was observed.
+     Session(String),
+     /// One completed assistant-text item is ready for forwarding.
+     Text(String),
+     /// A sanitized backend failure classification was observed.
+     Error {
+         /// Optional session id carried by the backend's error event.
+         session_id: Option<String>,
+         /// Sanitized error classification; never a raw backend message.
+         summary: String,
+     },
+     /// A failed turn whose backend contract explicitly proves no side effects occurred.
+     FailedWithoutSideEffects {
+         /// Optional durable session id.
+         session_id: Option<String>,
+         /// Sanitized error classification.
+         summary: String,
+     },
+     /// The backend dropped or replaced an attachment it was given. The runner kills the
+     /// process group at once, before the backend can act on the altered prompt, and fails
+     /// the turn without retaining the session observed in this run.
+     AttachmentNotProcessed,
+     /// A valid event that has no durable connector effect.
+     Ignored,
+ }
+ 
+ impl fmt::Debug for ParsedEvent {
+     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+         match self {
+             Self::Session(_) => formatter
+                 .debug_struct("Session")
+                 .field("session_present", &true)
+                 .finish(),
+             Self::Text(text) => formatter
+                 .debug_struct("Text")
+                 .field("text_len", &text.len())
+                 .finish(),
+             Self::Error {
+                 session_id,
+                 summary,
+             } => formatter
+                 .debug_struct("Error")
+                 .field("session_present", &session_id.is_some())
+                 .field("summary_len", &summary.len())
+                 .finish(),
+             Self::FailedWithoutSideEffects {
+                 session_id,
+                 summary,
+             } => formatter
+                 .debug_struct("FailedWithoutSideEffects")
+                 .field("session_present", &session_id.is_some())
+                 .field("summary_len", &summary.len())
+                 .finish(),
+             Self::AttachmentNotProcessed => formatter.write_str("AttachmentNotProcessed"),
+             Self::Ignored => formatter.write_str("Ignored"),
++            Self::Silent => formatter.write_str("Silent"),
+         }
+     }
+ }
+ 
+ /// Runs one JSONL child process while keeping event decoding backend-specific.
+@@ -504,10 +507,15 @@ where
+                     Ok(ParsedEvent::Session(session_id)) => {
+                         if observed_session.is_none() && !session_id.is_empty() {
+                             observed_session = Some(session_id);
+                         }
+                     }
++                    Ok(ParsedEvent::Silent) => {
++                        tx.send(RunnerEvent::Silent)
++                            .await
++                            .map_err(|_| HarnessError::BackendStream)?;
++                    }
+                     Ok(ParsedEvent::Text(text)) => {
+                         if !text.trim().is_empty() {
+                             // Reset below only after bounded backpressure clears. The total
+                             // deadline, not the idle deadline, covers intentional send waits.
+                             tx.send(RunnerEvent::Text(text))
+diff --git a/integrations/terminal-harness/tests/jsonl_process.rs b/integrations/terminal-harness/tests/jsonl_process.rs
+index d67d226..c9bd5f3 100644
+--- a/integrations/terminal-harness/tests/jsonl_process.rs
++++ b/integrations/terminal-harness/tests/jsonl_process.rs
+@@ -36,69 +36,74 @@ fn parse_event(line: &str) -> serde_json::Result<ParsedEvent> {
+     Ok(match value.get("type").and_then(Value::as_str) {
+         Some("session") => value["id"]
+             .as_str()
+             .map(|id| ParsedEvent::Session(id.to_owned()))
+             .unwrap_or(ParsedEvent::Ignored),
++        Some("silent") => ParsedEvent::Silent,
+         Some("text") => value["text"]
+             .as_str()
+             .map(|text| ParsedEvent::Text(text.to_owned()))
+             .unwrap_or(ParsedEvent::Ignored),
+         Some("error") => ParsedEvent::Error {
+             session_id: value["session_id"].as_str().map(str::to_owned),
+             summary: value["class"]
+                 .as_str()
+                 .unwrap_or("classified_error")
+                 .to_owned(),
+         },
+         Some("failed_without_side_effects") => ParsedEvent::FailedWithoutSideEffects {
+             session_id: value["session_id"].as_str().map(str::to_owned),
+             summary: "failed_resumable".to_owned(),
+         },
+         _ => ParsedEvent::Ignored,
+     })
+ }
+ 
+ fn process_spec(
+     executable: &std::path::Path,
+     cwd: &std::path::Path,
+     prompt: PromptTransport,
+ ) -> ProcessSpec {
+     ProcessSpec {
+         executable: executable.to_string_lossy().into_owned(),
+         args: Vec::new(),
+         cwd: cwd.to_path_buf(),
+         environment: Vec::new(),
+         prompt,
+         trace_method: "test_backend_run",
+         backend_name: "test",
+         total_timeout: Duration::from_secs(5),
+         idle_timeout: Duration::from_secs(2),
+     }
+ }
+ 
+ #[tokio::test]
+ async fn concurrent_group_profile_routes_are_process_local_and_never_enter_argv() {
+     use marmot_terminal_harness::{GroupProfileContext, with_group_profile_context};
+     let root = tempfile::tempdir().unwrap();
+     let script = executable_script(
+         root.path(),
+         "control-route",
+         r#"#!/bin/sh
+ test "$#" -eq 0 || exit 1
+ test "$MARMOT_AGENT_AUTH_TOKEN" = "test-token" || exit 2
+ test -z "${MARMOT_AGENT_AUTH_TOKEN_FILE:-}" || exit 3
+ test "$MARMOT_GROUP_PROFILE_TIMEOUT_SECS" = "30" || exit 4
++test "$MARMOT_MESSAGE_ID_HEX" = "fixture-message" || exit 5
++test "$MARMOT_SENDER_ACCOUNT_ID_HEX" = "fixture-sender" || exit 6
+ cat >/dev/null
+ printf '{"type":"text","text":"%s:%s"}\n' "$MARMOT_ACCOUNT_ID_HEX" "$MARMOT_GROUP_ID_HEX"
+ "#,
+     );
+     let run = |account: &str, group: &str| {
+         let context = GroupProfileContext {
+             socket: root.path().join("private.sock"),
+             auth_token: Some("test-token".into()),
+             account_id_hex: account.into(),
+             group_id_hex: group.into(),
++            message_id_hex: "fixture-message".to_owned(),
++            sender_account_id_hex: "fixture-sender".to_owned(),
+             request_timeout: Duration::from_secs(30),
+         };
+         let spec = process_spec(
+             &script,
+             root.path(),
+@@ -923,5 +928,35 @@ fn process_debug_output_redacts_paths_arguments_prompts_and_events() {
+         !format!("{:?}", ParsedEvent::Session("secret-session".to_owned()))
+             .contains("secret-session")
+     );
+     assert!(!format!("{:?}", ParsedEvent::Text("secret text".to_owned())).contains("secret text"));
+ }
++
++#[tokio::test]
++async fn explicit_silent_completion_preserves_session_and_outcome() {
++    let _permit = process_test_permit().await;
++    let root = tempfile::tempdir().unwrap();
++    let script = executable_script(
++        root.path(),
++        "silent.sh",
++        r#"#!/bin/sh
++cat >/dev/null
++printf '%s\n' '{"type":"session","id":"saved-session"}' '{"type":"silent"}'
++"#,
++    );
++    let (tx, mut rx) = mpsc::channel(4);
++    let outcome = run_jsonl_process(
++        process_spec(
++            &script,
++            root.path(),
++            PromptTransport::Stdin("fixture".to_owned()),
++        ),
++        tx,
++        parse_event,
++    )
++    .await
++    .unwrap();
++    assert_eq!(rx.recv().await, Some(RunnerEvent::Silent));
++    assert_eq!(rx.recv().await, None);
++    assert_eq!(outcome.observed_session.as_deref(), Some("saved-session"));
++    assert_eq!(outcome.exit_code, Some(0));
++}

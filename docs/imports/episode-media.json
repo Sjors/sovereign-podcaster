@@ -1,0 +1,7 @@
+{
+  "source": "Owner unpublished render_fallback.py and existing AV1 workflow policy; source not distributed",
+  "source_sha256": "fa584c1cd7f8a34b6169ae97ea3083b835ddfacab191269def604b30f59088bd",
+  "reuse": "Established 480p AV1/AAC profile and FFmpeg settings; new generic local journal, encoder wrapper and chat staging implementation",
+  "private_records_copied": false,
+  "license": "Owner authorization to adapt; repository public-release license review remains pending"
+}

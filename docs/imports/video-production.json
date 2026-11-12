@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "imported_utc_date": "2026-11-01",
+  "authorization": "Owner explicitly requested reuse, adaptation and sharing of these tools",
+  "license": "Owner-supplied code; repository license selection/public release review remains pending",
+  "sources": [
+    {
+      "source": "private video preparation tool",
+      "sha256": "f6959aab4900c31110b9635053740a06261edfe87d4bcfa8a46d3b1b598b5ae9",
+      "reuse": "Edited clocks, caption/source preparation and chapter policy"
+    },
+    {
+      "source": "private video renderer",
+      "sha256": "97a44b9b23ea436cc80a13709cfd8eedc5f134e94bd9b61f5a69a9c3bfe73973",
+      "reuse": "Layout, color conversion, waveform/speaker overlays, master encoding"
+    },
+    {
+      "source": "private MP4 verification tool",
+      "sha256": "31817ab4ec8cade03613c64cc7ce8050b712c0c9d57c3da61e82afed771b830a",
+      "reuse": "MP4 atoms and sampled audio alignment"
+    },
+    {
+      "source": "private source-layout demo",
+      "sha256": "5eb5de38636c0e996758526a97bc5358cc86dddafa99bb5042e687c8a19cf687",
+      "reuse": "Measured caption wrapping and source layout conventions"
+    },
+    {
+      "source": "private content-addressed video workflow",
+      "sha256": "3ff5376ea0615aed2341b84e5639ebad51c3ecf15b73b78a4bcd6f42006ea0d9",
+      "reuse": "Bottom-up HLS content addressing, containment and imeta tags"
+    },
+    {
+      "source": "private AV1 packaging tool",
+      "sha256": "38a0b0e99a13529db12e46bdad949881ffb2f3ce9270f17515d504aecdaff869",
+      "reuse": "Complete verified AV1 handoff and stream-copy packaging"
+    },
+    {
+      "source": "private HLS verification tool",
+      "sha256": "e56b5c86b3a22f4935e93f76e720231131b42450b6a1f2768d462ba01687d346",
+      "reuse": "Ordered compressed-packet equality and full HLS decode"
+    },
+    {
+      "source": "private AV1 packaging tests",
+      "sha256": "f944b20768622e1a1a9324434ae99cab90e67e78093f39c7502cbdd3e3e16efe",
+      "reuse": "Verified AV1 handoff tests, with generic synthetic duration/size values"
+    }
+  ],
+  "excluded": [
+    "Episode media, transcripts, portraits and source captures",
+    "Account keys, private instance configuration and deployment records",
+    "Hard-coded episode cuts, identities, paths and destinations"
+  ]
+}

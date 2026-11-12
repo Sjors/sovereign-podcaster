@@ -1,0 +1,28 @@
+{
+  "paused": true,
+  "show": "CHOOSE_EXPLICITLY",
+  "feed": "https://podcast.example.org/@show/feed.xml",
+  "castopod_config": "/absolute/private/castopod-publishing.json",
+  "source_catalog": "/absolute/private/source-clearances.json",
+  "python": "/home/YOUR_ACCOUNT/.local/share/sovereign-podcaster/transcription-venv/bin/python",
+  "primary_model": "/absolute/private/models/primary",
+  "secondary_model": "/absolute/private/models/secondary",
+  "segmentation_model": "/absolute/private/models/segmentation/model.onnx",
+  "embedding_model": "/absolute/private/models/embedding/model.onnx",
+  "glossary": "/absolute/source/sovereign-podcaster/skills/podcast-transcription/references/jargon.json",
+  "cpu_threads": 8,
+  "review_vocabulary": "",
+  "marmot_home": "/home/YOUR_ACCOUNT/.marmot-agents/podcast",
+  "account_id_hex": "CONFIGURE_FROM_YOUR_INSTANCE",
+  "group_id_hex": "CONFIGURE_FROM_YOUR_PAIRED_GROUP",
+  "trusted_hex": "CONFIGURE_FROM_YOUR_TRUSTED_CONTACT",
+  "feedback_root": "/absolute/private/artifacts/transcription-feedback",
+  "episodes": {
+    "SELECTED_EPISODE_GUID": {
+      "number": "SELECTED_EPISODE_NUMBER",
+      "final_audio_sha256": "EXACT_AUDITED_FINAL_SERVED_AUDIO_SHA256",
+      "source_clearance": "PRIVATE_RECORD_OF_SOURCE_AND_AD_CLEARANCE_IF_APPLICABLE",
+      "force_feedback": false
+    }
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Castopod maintenance"
+  short_description: "Upgrade Castopod while preserving and testing fixes"
+  default_prompt: "Use $castopod-maintenance to upgrade Castopod, checking upstream alternatives and preserving the required fixes."

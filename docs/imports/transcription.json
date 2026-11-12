@@ -1,0 +1,20 @@
+{
+  "source": "Owner explicitly requested current local transcription skill/workflow migration",
+  "date_utc": "2026-11-02",
+  "files": [
+    {
+      "source": "transcripts/backfill/analyze.py",
+      "sha256": "93d94516565297b93434cabe4f0a86d36a157369a1e1518b69824d7c4f4b2b64"
+    },
+    {
+      "source": "transcripts/backfill/publish_reviewed.py",
+      "sha256": "70e4a5ad6917122a66016eb6b047429cbc102669051b4e93b909062deab323ed"
+    },
+    {
+      "source": "private skill/SKILL.md",
+      "sha256": "8d91c1edbf51feac905d981f7772e33440c2161a9b612d4fa3f26942e4e1c92e"
+    }
+  ],
+  "media_and_credentials_copied": false,
+  "license": "Owner-supplied; public license selection pending"
+}

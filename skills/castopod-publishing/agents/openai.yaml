@@ -1,0 +1,4 @@
+interface:
+  display_name: "Castopod Publishing"
+  short_description: "Create drafts and publish Castopod episodes"
+  default_prompt: "Use $castopod-publishing to prepare this audio and show notes as a draft in the selected podcast."

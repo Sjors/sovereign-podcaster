@@ -1,0 +1,15 @@
+{
+  "transport": "ssh",
+  "ssh": "podcast-host",
+  "app": "/srv/castopod",
+  "media_root": "/srv/podcast-media",
+  "helper_directory": "/srv/podcast-tools/castopod",
+  "public_origin": "https://podcast.example.org",
+  "shows": ["CHOOSE_EXPLICITLY"],
+  "source_repository": "/srv/podcaster-source/castopod",
+  "upstream": "https://code.castopod.org/adaures/castopod.git",
+  "operator_fork": "https://github.com/YOUR_ACCOUNT/castopod.git",
+  "backup_root": "/srv/podcaster-backups",
+  "maintenance_pause": "/absolute/private/maintenance.json",
+  "operator_notes": "/private/castopod-instance.md"
+}

@@ -1,0 +1,11 @@
+{
+  "paused": true,
+  "allow_published_source_intake": false,
+  "show": "YOUR_SHOW",
+  "feed": "https://YOUR_PODCAST_HOST/@YOUR_SHOW/feed.xml",
+  "group_id_hex": "YOUR_PAIRED_MARMOT_GROUP_ID",
+  "source_catalog": "/absolute/private/source-catalog.json",
+  "source_controls": "/absolute/private/transcription-source-controls.json",
+  "castopod_config": "/absolute/private/castopod-publishing.json",
+  "review_config": "/absolute/private/transcription.json"
+}

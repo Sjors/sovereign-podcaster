@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fetch Nostr Events"
+  short_description: "Retrieve and verify public Nostr event data"
+  default_prompt: "Use $fetch-nostr-events to retrieve and verify this Nostr event."

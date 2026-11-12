@@ -1,0 +1,16 @@
+{
+  "source": "owner unpublished marmot-whitenoise skill",
+  "tracked_at_import": false,
+  "copied_files": [
+    {
+      "path": "scripts/wn_control.py",
+      "sha256": "5840767de521f47752fea98695f7ba8bccf216db12384e219b1c4db9cbc21267"
+    }
+  ],
+  "private_references_not_copied": [
+    "references/installation.md",
+    "references/sample-feedback.md",
+    "references/exports-and-control.md"
+  ],
+  "license": "No private skill license present; explicit owner authorization to adapt; public-release license review pending"
+}

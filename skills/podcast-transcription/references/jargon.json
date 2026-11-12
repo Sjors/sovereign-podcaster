@@ -1,0 +1,78 @@
+{
+ "_comment": "Spoken-form rules. 'aliases' are literal word replacements (whole words, case-insensitive unless case_sensitive is set); they are synced to one ElevenLabs pronunciation dictionary and applied server-side, so they cost no characters. Add terms here only when the default reading is wrong; acronyms the listener knows are best left spelled out (IBD, ECC, PTLC) as prep when a thread introduces new ones (synthesize.py --suggest lists candidates). 'regex' rules run locally before synthesis, only for patterns a dictionary cannot express.",
+ "aliases": {
+  "sha256": "shah 256",
+  "SHA-256": "shah 256",
+  "sha256d": "double shah 256",
+  "SHA-256d": "double shah 256",
+  "secp256k1": "seck P 256 K 1",
+  "bech32": "betch 32",
+  "bech32m": "betch 32 M",
+  "nLockTime": "n lock time",
+  "nSequence": "n sequence",
+  "scriptPubKey": "script pub key",
+  "sighash": "sig hash",
+  "CISA": "sisa",
+  "SNARK": "snark",
+  "SNARKs": "snarks",
+  "P2TRv2": "P 2 T R version 2",
+  "P2TR": "P 2 T R",
+  "P2TRH": "P 2 T R H",
+  "P2MR": "P 2 M R",
+  "P2QR": "P 2 Q R",
+  "P2WPKH": "P 2 W P K H",
+  "P2WSH": "P 2 W S H",
+  "P2PKH": "P 2 P K H",
+  "P2SH": "P 2 S H",
+  "P2PK": "P 2 P K",
+  "MuSig": "mew sig",
+  "MuSig2": "mew sig 2",
+  "Tapscript": "tap script",
+  "tapleaf": "tap leaf",
+  "SHRINCS": "shrinks",
+  "OP_CHECKSIG": "op check sig",
+  "OP_CHECKSIGVERIFY": "op check sig verify",
+  "OP_CHECKSIGADD": "op check sig add",
+  "OP_CHECKMULTISIG": "op check multi sig",
+  "OP_RETURN": "op return",
+  "OP_TRUE": "op true",
+  "OP_SUCCESS": "op success",
+  "OP_CTV": "op C T V",
+  "OP_CAT": "op cat",
+  "OP_CLTV": "op C L T V",
+  "OP_CSV": "op C S V",
+  "OP_CHECKTEMPLATEVERIFY": "op check template verify",
+  "OP_VAULT": "op vault",
+  "OP_CIV": "op C I V",
+  "OP_CHECKLOCKTIMEVERIFY": "op check lock time verify",
+  "OP_CHECKSEQUENCEVERIFY": "op check sequence verify",
+  "CHECKSIG": "check sig",
+  "CHECKSIGVERIFY": "check sig verify",
+  "CHECKMULTISIG": "check multi sig",
+  "ANYPREVOUT": "any prev out",
+  "ANYONECANPAY": "anyone can pay",
+  "SIGHASH_ALL": "sig hash all",
+  "SIGHASH_NONE": "sig hash none",
+  "SIGHASH_SINGLE": "sig hash single",
+  "SIGHASH_DEFAULT": "sig hash default",
+  "SIGHASH_ANYONECANPAY": "sig hash anyone can pay"
+ },
+ "regex": [
+  {
+   "pattern": "https?://\\S+",
+   "replace": "link"
+  },
+  {
+   "pattern": "\\b0x([0-9a-fA-F]{1,8})\\b",
+   "replace": "hex \\1"
+  },
+  {
+   "pattern": "\\b[0-9a-f]{32,}(:\\d+)?\\b",
+   "replace": "a hex string"
+  },
+  {
+   "pattern": "(\\d)x(\\d)",
+   "replace": "\\1 by \\2"
+  }
+ ]
+}

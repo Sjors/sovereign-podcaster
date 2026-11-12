@@ -1,0 +1,6 @@
+{
+  "slides": [
+    {"start": 0, "end": 10, "kind": "topic", "title": "Preserve the sources"},
+    {"start": 10, "end": 20, "kind": "topic", "title": "Review the revision"}
+  ]
+}

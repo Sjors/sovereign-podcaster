@@ -1,0 +1,7 @@
+{
+  "provider": "ppq",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "base_url": "https://api.ppq.ai/v1",
+  "api_key_file": "~/.config/sovereign-podcaster/ppq/api.key"
+}

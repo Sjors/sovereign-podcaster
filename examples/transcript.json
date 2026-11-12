@@ -1,0 +1,8 @@
+{
+  "title": "Synthetic workflow demonstration",
+  "duration": 20,
+  "cues": [
+    {"start": 0, "end": 10, "speaker": "Host", "text": "Keep the original audio and the full transcript together."},
+    {"start": 10, "end": 20, "speaker": "Guest", "text": "Review each revision before distributing the video."}
+  ]
+}

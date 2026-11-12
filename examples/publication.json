@@ -1,0 +1,25 @@
+{
+  "maintenance_guard": "/absolute/private/publication-control.json",
+  "marmot_home": "/absolute/private/marmot-instance",
+  "nostr_python": "/absolute/private/nostr-venv/bin/python",
+  "identity_file": "/absolute/private/identity.json",
+  "expected_pubkey": "REPLACE_WITH_SHOW_HEX_PUBLIC_KEY",
+  "draft_servers": [
+    "https://blossom.example.org"
+  ],
+  "publication_servers": [
+    "https://blossom.example.org",
+    "https://ANOTHER_BLOSSOM_ORIGIN"
+  ],
+  "publication_relays": [
+    "wss://relay.example.org",
+    "wss://ANOTHER_RELAY"
+  ],
+  "playback_origins": [
+    "https://YOUR_PLAYER_ORIGIN"
+  ],
+  "server_options": {},
+  "youtube_python": "/absolute/private/youtube-venv/bin/python",
+  "youtube_config_directory": "/absolute/private/youtube-oauth",
+  "youtube_channel_id": "REPLACE_WITH_EXACT_CHANNEL_ID"
+}

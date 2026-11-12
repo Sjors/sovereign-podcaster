@@ -1,0 +1,14 @@
+{
+  "repository": "https://github.com/marmot-protocol/mdk",
+  "tag": "wn-agent-v0.14.0",
+  "version": "0.14.0",
+  "github_prerelease": true,
+  "installer": "install-codex-marmot.sh",
+  "installer_sha256": "6f4b88e62ed32802f5679845d7f0bc39bd5197c051c69e3a8c00d6045790f811",
+  "assets_sha256": {
+    "wn-agent-linux-x86_64-0.14.0.tar.gz": "4dd4685aade4479f2a998a262cf74f40d6ad9a75b2004bebfb12e6548a82fa36",
+    "wn-codex-linux-x86_64-0.14.0.tar.gz": "cf02f61ab097216ebb3eb3b549821c9f243b46ea4c15efc02c38f4df03c2bfb3"
+  },
+  "upstream_agent_instructions": "https://github.com/marmot-protocol/mdk/blob/master/integrations/AGENTS.md",
+  "checked_date_utc": "2026-11-01"
+}

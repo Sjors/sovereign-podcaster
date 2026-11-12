@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nostr Publishing"
+  short_description: "Sign and publish Nostr videos, notes and articles"
+  default_prompt: "Use $nostr-publishing to prepare the requested publication under the selected identity."

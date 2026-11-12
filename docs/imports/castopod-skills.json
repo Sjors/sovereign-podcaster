@@ -1,0 +1,60 @@
+{
+  "source": "Owner private skills working tree",
+  "source_has_uncommitted_changes": true,
+  "files": [
+    {
+      "source_path": "castopod-publishing/scripts/publish.py",
+      "sha256": "fb8e57a15ec5dd38e712f02dbc3510ae129f0edf80f9d8596490ff5a0893e196"
+    },
+    {
+      "source_path": "castopod-publishing/tests/test_publish.py",
+      "sha256": "2d354b9ba3be02ddaaa73864c4b4002b92e2875aca15ffb90ad9c4e138e27832"
+    },
+    {
+      "source_path": "castopod-publishing/agents/openai.yaml",
+      "sha256": "8f134ea105a35f510dfc58bcbdd656b31340d419f14b7d82303dc1d90bb4667b"
+    },
+    {
+      "source_path": "castopod-publishing/scripts/castopod/castopod-bootstrap.php",
+      "sha256": "73b3fc79a8820dc23eff872ea510c4446e7a97607e3022577bb2a648ef58a4e5"
+    },
+    {
+      "source_path": "castopod-publishing/scripts/castopod/castopod-publish-episode.php",
+      "sha256": "1839348cd8fece2cc572282da991e6f8f96fdff15cc559c9d618eff9db6f0a8e"
+    },
+    {
+      "source_path": "castopod-publishing/scripts/castopod/castopod-publish-draft.php",
+      "sha256": "1443ac79aac9a653604b470ebce51e89d9813c9ca24a11c42be541aef5050994"
+    },
+    {
+      "source_path": "castopod-publishing/scripts/castopod/castopod-inspect.php",
+      "sha256": "1e0f83708f8af81192f455e278589b3ad2e25bd251bd31925983bfe61846fd0e"
+    },
+    {
+      "source_path": "castopod-publishing/scripts/castopod/castopod-update-episode.php",
+      "sha256": "afe95e5d7776124298e7bf18af940af79d0d684d1c2ab99ad33b0a9a61eada0a"
+    },
+    {
+      "source_path": "castopod-publishing/SKILL.md",
+      "sha256": "1acdaa6d15f2dd61b175d1754693b5587addf15de808329022c56e601c7b803b",
+      "reuse": "adapted separately; private workflow defaults omitted"
+    },
+    {
+      "source_path": "castopod-publishing/references/operations.md",
+      "sha256": "ec09c5d56976e4fc3d8b54803f7161703c01b156ff45272241d1c35012e4ddd1",
+      "reuse": "adapted separately; private workflow defaults omitted"
+    },
+    {
+      "source_path": "castopod-maintenance/SKILL.md",
+      "sha256": "056cdd302257d884b47b08aab5d2c7940c846e201a60e8509d3923d77093dd90",
+      "reuse": "adapted separately; private deployment records omitted"
+    },
+    {
+      "source_path": "castopod-maintenance/agents/openai.yaml",
+      "sha256": "54541d26ddc59f96c4400389b2db97f4b0ea22d41204af10b5b7961c47e84df2",
+      "reuse": "adapted separately; private deployment records omitted"
+    }
+  ],
+  "private_instance_records_and_patch_exports_copied": false,
+  "license": "No source skill license present; explicit owner authorization to adapt/share; public-release license review remains required. Castopod upstream licensing is AGPLv3; preserve upstream obligations for derived code/patches."
+}

@@ -1,0 +1,376 @@
+{
+  "schema": 1,
+  "description": "Published and prepared patch source snapshot, not a deployment manifest. Refresh when maintained branches change.",
+  "source_gist": "https://gist.github.com/Sjors/edd59acfb4ea1a83978f5d22e630e92c",
+  "source_gist_revision": "95a38d3727a79205cf7c8dc67278f7c24c2b86fb",
+  "checked_date_utc": "2026-11-04",
+  "repositories": {
+    "castopod": {
+      "fork": "https://github.com/Sjors/castopod.git",
+      "upstream": "https://code.castopod.org/adaures/castopod.git",
+      "base": "101022c6f4098e53fae58a8907dfa5681262ffa5",
+      "base_label": "v1.15.6",
+      "license_url": "https://github.com/Sjors/castopod/blob/85da66bc396bf3da2f6f4da4025491434e548b58/LICENSE.md"
+    },
+    "nostube": {
+      "fork": "https://github.com/Sjors/nostube.git",
+      "upstream": "https://github.com/flox1an/nostube.git",
+      "base": "e09187039bfa3e880338eedc07d16053afdbaefd",
+      "license_url": "https://github.com/Sjors/nostube/blob/de917edb4176e665f80cc85b7879ab744970dfdb/LICENSE"
+    }
+  },
+  "topics": [
+    {
+      "repository": "castopod",
+      "branch": "2026/10/audio-file-size",
+      "commit": "85da66bc396bf3da2f6f4da4025491434e548b58",
+      "tree": "c43af266e46f132342410a2e4e26d84369d34fac",
+      "parents": [
+        "101022c6f4098e53fae58a8907dfa5681262ffa5"
+      ],
+      "signature_verified": true,
+      "author_date": "2026-10-24T06:12:22Z",
+      "committer_date": "2026-10-24T06:12:22Z",
+      "dependencies": [],
+      "license": "AGPL-3.0"
+    },
+    {
+      "repository": "castopod",
+      "branch": "2026/11/audio-mime-type",
+      "commit": "82268dae4e911983ff72524108d29d28736172f6",
+      "tree": "bccf44093831385bc703c85aaeeae0b9260c22d1",
+      "parents": [
+        "101022c6f4098e53fae58a8907dfa5681262ffa5"
+      ],
+      "base": "101022c6f4098e53fae58a8907dfa5681262ffa5",
+      "checked_date_utc": "2026-11-04",
+      "author_date": "2026-11-04T07:41:29Z",
+      "committer_date": "2026-11-04T07:41:29Z",
+      "dependencies": [],
+      "license": "AGPL-3.0",
+      "signature_verified": true,
+      "published": true,
+      "validation_record": "docs/patches/audio-delivery.md",
+      "state_note": "Owner published the signed commit. GitHub verified its signature; tree, parent, author/committer UTC timestamps and message match the tested preparation.",
+      "preparation_commit": "728718b1eb8a0ef48183d137538aecd34bf2f30d",
+      "last_published": {
+        "commit": "82268dae4e911983ff72524108d29d28736172f6",
+        "tree": "bccf44093831385bc703c85aaeeae0b9260c22d1",
+        "checked_date_utc": "2026-11-04"
+      }
+    },
+    {
+      "repository": "castopod",
+      "branch": "2026/10/feed-artwork",
+      "commit": "06d22030e6f2a3244f2074c10802571568ab4a23",
+      "tree": "8c5d5e1662d4b5961af1f98719dcee212c5fe31b",
+      "parents": [
+        "101022c6f4098e53fae58a8907dfa5681262ffa5"
+      ],
+      "signature_verified": true,
+      "author_date": "2026-10-24T06:12:22Z",
+      "committer_date": "2026-10-24T06:12:22Z",
+      "dependencies": [],
+      "license": "AGPL-3.0"
+    },
+    {
+      "repository": "castopod",
+      "branch": "2026/10/rss-byte-ranges",
+      "commit": "43b221223c9319d7b396e7ef70631d9edbc0eb75",
+      "tree": "49dd21fb4f726b23ce5eb90fa68c35a6142f1bec",
+      "parents": [
+        "101022c6f4098e53fae58a8907dfa5681262ffa5"
+      ],
+      "signature_verified": true,
+      "author_date": "2026-10-24T06:12:23Z",
+      "committer_date": "2026-10-24T06:12:23Z",
+      "dependencies": [],
+      "license": "AGPL-3.0"
+    },
+    {
+      "repository": "castopod",
+      "branch": "2026/11/sitemap",
+      "commit": "8160381ccf32eb0d8178e78550a0873f318b80cb",
+      "tree": "72e3b4666c1bbb437586cef8277bb04acdcff42a",
+      "parents": [
+        "639c2e76447c7f41161cbccac8bab4c61b8b81f3"
+      ],
+      "base": "101022c6f4098e53fae58a8907dfa5681262ffa5",
+      "checked_date_utc": "2026-11-03",
+      "author_date": "2026-11-03T12:20:15Z",
+      "committer_date": "2026-11-03T12:20:15Z",
+      "dependencies": [],
+      "license": "AGPL-3.0",
+      "signature_verified": false,
+      "published": false,
+      "validation_record": "docs/patches/topic-publication.md",
+      "state_note": "Prepared documentation-only revision; publication has not been verified. last_published records the previously verified source.",
+      "last_published": {
+        "commit": "639c2e76447c7f41161cbccac8bab4c61b8b81f3",
+        "tree": "a3ce476b04460306ecd41a2c2841ba73d3f4d804",
+        "checked_date_utc": "2026-11-03"
+      },
+      "preparation_commit": "1247732dfe70e57209e89bd58d9473173f0b0ad6",
+      "preparation_parents": [
+        "8f0903357342828ced1b036281827ac87bb486b8"
+      ],
+      "previous_published": {
+        "commit": "8f0903357342828ced1b036281827ac87bb486b8",
+        "tree": "85f5a72814130e6fa8f2d01fe59dae45eb7e8886",
+        "checked_date_utc": "2026-11-03"
+      },
+      "documentation_only_since": "639c2e76447c7f41161cbccac8bab4c61b8b81f3",
+      "validation_note": "Reviewed Markdown and diff checks; no application tests rerun for documentation-only changes."
+    },
+    {
+      "repository": "castopod",
+      "branch": "2026/11/transcript-indexing",
+      "commit": "5e794419097fef3df53930a9333824e028413bed",
+      "tree": "667d9b135a111f9889182beca9c14bd4301e3702",
+      "parents": [
+        "101022c6f4098e53fae58a8907dfa5681262ffa5"
+      ],
+      "signature_verified": true,
+      "author_date": "2026-11-01T06:33:28Z",
+      "committer_date": "2026-11-01T06:33:28Z",
+      "dependencies": [],
+      "license": "AGPL-3.0"
+    },
+    {
+      "repository": "castopod",
+      "branch": "2026/11/episode-video",
+      "commit": "434fa28527faac4cd9d76e6f10537e8724edee16",
+      "tree": "b2b4b1b9987d6ecaffacbca678d8ad2fb4def6f1",
+      "parents": [
+        "3486f52ba7b047adec02fe7e584201f124e2501a"
+      ],
+      "signature_verified": true,
+      "author_date": "2026-11-01T10:55:01Z",
+      "committer_date": "2026-11-01T10:55:01Z",
+      "dependencies": [],
+      "license": "AGPL-3.0"
+    },
+    {
+      "repository": "castopod",
+      "branch": "2026/11/homepage-preview",
+      "commit": "29ff2c34e9c8c75ab2d67be942d39e6a32442c4e",
+      "tree": "e47566085a7531e33d4bf516732a448f276615d2",
+      "parents": [
+        "6beaead14ce016ec1fe0547e3200aebb9c04e50d"
+      ],
+      "base": "101022c6f4098e53fae58a8907dfa5681262ffa5",
+      "checked_date_utc": "2026-11-03",
+      "author_date": "2026-11-03T12:20:15Z",
+      "committer_date": "2026-11-03T12:20:15Z",
+      "dependencies": [],
+      "license": "AGPL-3.0",
+      "signature_verified": false,
+      "published": false,
+      "validation_record": "docs/patches/homepage-preview.md",
+      "state_note": "Prepared documentation-only revision; publication has not been verified. last_published records the previously verified source.",
+      "last_published": {
+        "commit": "6beaead14ce016ec1fe0547e3200aebb9c04e50d",
+        "tree": "8b1e465f0768a053f2dcb20a51712c9d61053eb3",
+        "checked_date_utc": "2026-11-03"
+      },
+      "preparation_commit": "f08c7b5e51f7455cfd2b924522263d777efb2cc9",
+      "preparation_parents": [
+        "7042fabe6c92ab3e3bbbec22f9f31a20533faf96"
+      ],
+      "previous_published": {
+        "commit": "7042fabe6c92ab3e3bbbec22f9f31a20533faf96",
+        "tree": "7d73188041eb76cf58864c80e8ed3bf8f5719cbb",
+        "checked_date_utc": "2026-11-03"
+      },
+      "documentation_only_since": "6beaead14ce016ec1fe0547e3200aebb9c04e50d",
+      "validation_note": "Reviewed Markdown and diff checks; no application tests rerun for documentation-only changes."
+    },
+    {
+      "repository": "castopod",
+      "branch": "2026/11/episode-seo",
+      "commit": "940573f703e66b8017b9d774d2cecc10979f717f",
+      "tree": "673ee07eaba27d06e13ac412f834df7057f09342",
+      "parents": [
+        "f68fca985c5b1c0b9a33e24957932b83b75fa5e0"
+      ],
+      "base": "5e794419097fef3df53930a9333824e028413bed",
+      "upstream_base": "101022c6f4098e53fae58a8907dfa5681262ffa5",
+      "checked_date_utc": "2026-11-03",
+      "author_date": "2026-11-03T12:20:15Z",
+      "committer_date": "2026-11-03T12:20:15Z",
+      "dependencies": [
+        "castopod:2026/11/transcript-indexing"
+      ],
+      "upstream_mrs": [
+        {
+          "mr": 377,
+          "commit": "1d3bd07dba85a2b326fdf84baa594b16b7a4ca32"
+        },
+        {
+          "mr": 382,
+          "commit": "774bdf6094c998ce2450d3bfecb2cd7e770d98c3"
+        },
+        {
+          "mr": 380,
+          "commit": "d8f3dd443bd8dc756664618a551fd2a7869b119d"
+        },
+        {
+          "mr": 381,
+          "commit": "85d8aeba80efaf367e2c9a0ff76f64a20e3bc62a"
+        },
+        {
+          "mr": 385,
+          "commit": "28a390ca8dd7a133254ac0f4a16bd39d69439813"
+        }
+      ],
+      "license": "AGPL-3.0",
+      "signature_verified": false,
+      "published": false,
+      "validation_record": "docs/patches/episode-seo.md",
+      "preparation_commit": "84789c557b6c3fba91e3e586decf9b45cb598d0a",
+      "last_published": {
+        "commit": "f68fca985c5b1c0b9a33e24957932b83b75fa5e0",
+        "tree": "afd60567c173ceff139e704ff95c9b33dad55122",
+        "checked_date_utc": "2026-11-03"
+      },
+      "documentation_only_since": "f68fca985c5b1c0b9a33e24957932b83b75fa5e0",
+      "state_note": "Prepared documentation-only revision; publication has not been verified. last_published records the previously verified source.",
+      "validation_note": "Reviewed Markdown and diff checks; no application tests rerun for documentation-only changes."
+    },
+    {
+      "repository": "castopod",
+      "branch": "2026/11/web-cache-origins",
+      "commit": "37bdc0996f9e3fdad182ddee0dad74fd3cf72759",
+      "tree": "550e645e9f3ed4cbf9e257643c1d130ae83e86ce",
+      "parents": [
+        "a65d380c3ef8f52dcb36d8c52c622cbcf46ec922"
+      ],
+      "base": "101022c6f4098e53fae58a8907dfa5681262ffa5",
+      "checked_date_utc": "2026-11-03",
+      "author_date": "2026-11-03T12:20:15Z",
+      "committer_date": "2026-11-03T12:20:15Z",
+      "dependencies": [],
+      "license": "AGPL-3.0",
+      "signature_verified": false,
+      "published": false,
+      "validation_record": "docs/patches/web-cache-origins.md",
+      "state_note": "Prepared documentation-only revision; publication has not been verified. last_published records the previously verified source.",
+      "preparation_commit": "b7875ee0e4aad8feb7d058d1bb636e455e32906a",
+      "preparation_parents": [
+        "101022c6f4098e53fae58a8907dfa5681262ffa5"
+      ],
+      "last_published": {
+        "commit": "a65d380c3ef8f52dcb36d8c52c622cbcf46ec922",
+        "tree": "4d92bfe594feceadde2b4407d2c078a5827a2f17",
+        "checked_date_utc": "2026-11-03"
+      },
+      "documentation_only_since": "a65d380c3ef8f52dcb36d8c52c622cbcf46ec922",
+      "validation_note": "Reviewed Markdown and diff checks; no application tests rerun for documentation-only changes."
+    },
+    {
+      "repository": "castopod",
+      "branch": "2026/11/podcast-domains",
+      "commit": "79c5ce973fe5dbee991603308a6827830e9e6882",
+      "tree": "ea5c1f97413549a6a5c1be128c9f9ec750e3df23",
+      "parents": [
+        "711f2b94901291d292f405d6d19737db7a5313e7"
+      ],
+      "base": "101022c6f4098e53fae58a8907dfa5681262ffa5",
+      "checked_date_utc": "2026-11-03",
+      "author_date": "2026-11-03T12:20:15Z",
+      "committer_date": "2026-11-03T12:20:15Z",
+      "dependencies": [
+        "2026/11/web-cache-origins"
+      ],
+      "license": "AGPL-3.0",
+      "signature_verified": false,
+      "published": false,
+      "validation_record": "docs/patches/podcast-domains.md",
+      "state_note": "Prepared documentation-only revision; publication has not been verified. last_published records the previously verified source.",
+      "preparation_commit": "4c44d75fce1b0d8d91500ffe2cf146a2dceac651",
+      "preparation_parents": [
+        "b7875ee0e4aad8feb7d058d1bb636e455e32906a"
+      ],
+      "last_published": {
+        "commit": "711f2b94901291d292f405d6d19737db7a5313e7",
+        "tree": "ee8f8bd99f9863cb497a77e5523109da6001471a",
+        "checked_date_utc": "2026-11-03"
+      },
+      "documentation_only_since": "711f2b94901291d292f405d6d19737db7a5313e7",
+      "validation_note": "Reviewed Markdown and diff checks; no application tests rerun for documentation-only changes."
+    },
+    {
+      "repository": "nostube",
+      "branch": "2026/11/embed-channel-player",
+      "commit": "780bbf83e5ce03903e856812315d2302983467ef",
+      "tree": "7c9a9adc8dee3dca98f96f36e0b061982457823c",
+      "parents": [
+        "de917edb4176e665f80cc85b7879ab744970dfdb"
+      ],
+      "signature_verified": true,
+      "author_date": "2026-11-01T12:02:39Z",
+      "committer_date": "2026-11-01T12:02:39Z",
+      "dependencies": [
+        "nostube:2026/11/embed-event-verification"
+      ],
+      "license": "MIT"
+    },
+    {
+      "repository": "nostube",
+      "branch": "2026/11/embed-event-verification",
+      "commit": "de917edb4176e665f80cc85b7879ab744970dfdb",
+      "tree": "63441021190b6c022b38cc5ac1949726b29e67bf",
+      "parents": [
+        "e09187039bfa3e880338eedc07d16053afdbaefd"
+      ],
+      "signature_verified": true,
+      "author_date": "2026-11-01T12:02:39Z",
+      "committer_date": "2026-11-01T12:02:39Z",
+      "dependencies": [],
+      "license": "MIT"
+    },
+    {
+      "repository": "nostube",
+      "branch": "2026/11/embed-return-link",
+      "commit": "c7a46d0f8b9c3054213caa6289e88647e442b4c1",
+      "tree": "69fa9a07f49eae924f32dbeac47e05704efe9b78",
+      "parents": [
+        "e09187039bfa3e880338eedc07d16053afdbaefd"
+      ],
+      "signature_verified": true,
+      "author_date": "2026-11-01T12:02:39Z",
+      "committer_date": "2026-11-01T12:02:39Z",
+      "dependencies": [],
+      "license": "MIT"
+    },
+    {
+      "repository": "nostube",
+      "branch": "2026/11/ios-av1-capability",
+      "commit": "b31785515cfa1e10acf021f2778b332e4ce0355d",
+      "tree": "ebfbe537257cdd1c2425ca4d734f72b5c10eca67",
+      "parents": [
+        "e09187039bfa3e880338eedc07d16053afdbaefd"
+      ],
+      "signature_verified": true,
+      "author_date": "2026-11-01T12:02:39Z",
+      "committer_date": "2026-11-01T12:02:39Z",
+      "dependencies": [],
+      "license": "MIT"
+    }
+  ],
+  "local_adapter_patches": [
+    {
+      "project": "marmot-protocol/mdk",
+      "upstream": "https://github.com/marmot-protocol/mdk.git",
+      "tag": "wn-agent-v0.14.0",
+      "commit": "3fb4b4759ac676b0c21c4c3527074866c9fa4c89",
+      "path": "patches/marmot-message-context.patch",
+      "sha256": "fad7973d8061c9bd246192a16cc1d5680a6a23052fbe4c81b6f58403162b8224",
+      "license": "MIT; see third_party/marmot/LICENSE",
+      "purpose": "Expose authenticated incoming message/sender IDs and honor explicit successful silent turns without hiding errors or uncertain deliveries",
+      "documentation": "adapters/marmot/message-context.md",
+      "status": "Local adapter patch; check upstream before each release update"
+    }
+  ],
+  "deployment_policy": "Instance deployment state, authorization and recovery records are private and omitted from this source catalog."
+}

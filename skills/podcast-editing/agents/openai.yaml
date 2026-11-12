@@ -1,0 +1,4 @@
+interface:
+  display_name: "Podcast Editing"
+  short_description: "Edit podcast audio and preserve transcript timing"
+  default_prompt: "Use $podcast-editing to edit the selected episode and keep its transcript aligned."

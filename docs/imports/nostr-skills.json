@@ -1,0 +1,43 @@
+{
+  "copied_at": "2026-11-01",
+  "source_repository": "owner private skills repository",
+  "license": "No license file present; owner authorized copying/adapting; public release license review pending",
+  "files_before_adaptation": [
+    {
+      "source_path": "nostr-publishing/SKILL.md",
+      "sha256": "a2da912f93de2c6d468613af51a8da8ddcbc6ed3d713e73a54d2bdc6ab00a330"
+    },
+    {
+      "source_path": "nostr-publishing/agents/openai.yaml",
+      "sha256": "2e24bc2ed94a944ce2d261f1c548f0f7546b03da225c1ce1d0fa6dda34d0bc75"
+    },
+    {
+      "source_path": "nostr-publishing/references/operations.md",
+      "sha256": "0e10478e92bf81d33c82c5e75b793c8637a4e2a75a638526eb3d29f44ed479b6"
+    },
+    {
+      "source_path": "nostr-publishing/scripts/nostr_publish.py",
+      "sha256": "653c7460093c980960ba163dbb0e7465d096b0ad4963560c73261cb7c440f090"
+    },
+    {
+      "source_path": "nostr-publishing/scripts/requirements.txt",
+      "sha256": "9c02dbb7cfc1312f589ae2731f5caf3310cad03968e635ee610399c155348148"
+    },
+    {
+      "source_path": "nostr-publishing/tests/test_nostr_publish.py",
+      "sha256": "bd74ddd7cbbbea80c00f6fd6a3635a7ba72b583580808e8cfeb1849910b9483a"
+    },
+    {
+      "source_path": "fetch-nostr-events/SKILL.md",
+      "sha256": "51b5a6bb06047eb9cee0339758ff5439c1cec3e279861619fdb0aac9802deb2b"
+    },
+    {
+      "source_path": "fetch-nostr-events/agents/openai.yaml",
+      "sha256": "ee76c84a6ade2ff5e9171305f6079eb234cfcc6c7a186eb289665b9a78b8a827"
+    },
+    {
+      "source_path": "fetch-nostr-events/scripts/fetch_nostr_event.py",
+      "sha256": "fced55f60b49006831e0ba549849fc6387696dbbd3566d5dd128e0cbe6d678db"
+    }
+  ]
+}

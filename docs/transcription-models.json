@@ -1,0 +1,101 @@
+{
+  "observed_date_utc": "2026-11-02",
+  "weights_distributed": false,
+  "models": [
+    {
+      "role": "primary",
+      "repository": "dropbox-dash/faster-whisper-large-v3-turbo",
+      "revision": "0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf",
+      "model_card": "https://huggingface.co/dropbox-dash/faster-whisper-large-v3-turbo",
+      "reported_license": "MIT",
+      "verification": "All five deployed file hashes match this revision; model.bin matched public LFS SHA256 and other files were fetched and hashed.",
+      "files": {
+        "model.bin": {
+          "sha256": "e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da",
+          "bytes": 1617884929
+        },
+        "config.json": {
+          "sha256": "b0253ea6c0d3bea6b1e19e91a02acfd3b53f4467362efcb5a3e6b16c9b3a9b7e",
+          "bytes": 2263
+        },
+        "preprocessor_config.json": {
+          "sha256": "7ccc62c6f2765af1f3b46c00c9b5894426835a05021c8b9c01eecb6dfb542711",
+          "bytes": 340
+        },
+        "tokenizer.json": {
+          "sha256": "297b13372ac43916285644fb9687add3cc62ee2a1adb60da3dc25cc94c1871fd",
+          "bytes": 2710337
+        },
+        "vocabulary.json": {
+          "sha256": "c69260f2ab26d659b7c398f9a2b2b48ed0df16c3b47d7326782fd9cba71690c1",
+          "bytes": 1068114
+        }
+      }
+    },
+    {
+      "role": "secondary",
+      "repository": "Systran/faster-whisper-large-v3",
+      "revision": "edaa852ec7e145841d8ffdb056a99866b5f0a478",
+      "model_card": "https://huggingface.co/Systran/faster-whisper-large-v3",
+      "reported_license": "MIT",
+      "verification": "All five deployed file hashes match this revision; model.bin matched public LFS SHA256 and other files were fetched and hashed.",
+      "files": {
+        "model.bin": {
+          "sha256": "69f74147e3334731bc3a76048724833325d2ec74642fb52620eda87352e3d4f1",
+          "bytes": 3087284237
+        },
+        "config.json": {
+          "sha256": "a9306624f5ec14270a014b647e5c316b6e03a662c369758d1b90697a7b0655b9",
+          "bytes": 2394
+        },
+        "preprocessor_config.json": {
+          "sha256": "7ccc62c6f2765af1f3b46c00c9b5894426835a05021c8b9c01eecb6dfb542711",
+          "bytes": 340
+        },
+        "tokenizer.json": {
+          "sha256": "6d8cbd7cd0d8d5815e478dac67b85a26bbe77c1f5e0c6d76d1ce2abc0e5f21ca",
+          "bytes": 2480617
+        },
+        "vocabulary.json": {
+          "sha256": "c69260f2ab26d659b7c398f9a2b2b48ed0df16c3b47d7326782fd9cba71690c1",
+          "bytes": 1068114
+        }
+      }
+    },
+    {
+      "role": "segmentation",
+      "name": "sherpa-onnx-pyannote-segmentation-3-0",
+      "source": "https://github.com/k2-fsa/sherpa-onnx/releases/tag/speaker-segmentation-models",
+      "guide": "https://k2-fsa.github.io/sherpa/onnx/speaker-diarization/models.html",
+      "original": "https://huggingface.co/pyannote/segmentation-3.0",
+      "reported_license": "MIT; converted package includes CNRS copyright/license",
+      "verification": "Observed deployed file hashes; release tags/assets can change. Compare downloaded bytes before adopting them.",
+      "files": {
+        "model.onnx": {
+          "sha256": "220ad67ca923bef2fa91f2390c786097bf305bceb5e261d4af67b38e938e1079",
+          "bytes": 5992913
+        },
+        "LICENSE": {
+          "sha256": "14d7016ad68e7394d6e6b78d96cc2ae431c905287b89674cfdf021e79e62b8ba",
+          "bytes": 1061
+        }
+      }
+    },
+    {
+      "role": "embedding",
+      "name": "nemo_en_titanet_large.onnx",
+      "source": "https://github.com/k2-fsa/sherpa-onnx/releases/tag/speaker-recongition-models",
+      "guide": "https://k2-fsa.github.io/sherpa/onnx/speaker-identification/index.html",
+      "original": "https://huggingface.co/nvidia/speakerverification_en_titanet_large",
+      "reported_license": "CC-BY-4.0 upstream model; retain attribution and conversion provenance",
+      "verification": "Observed deployed file hash; release asset revision not inferred from its filename.",
+      "files": {
+        "model.onnx": {
+          "source_filename": "nemo_en_titanet_large.onnx",
+          "sha256": "d51abcf31717ef28162f26acb9d44dd4127c3d44c9b8624f699f3425daca8e77",
+          "bytes": 101405493
+        }
+      }
+    }
+  ]
+}

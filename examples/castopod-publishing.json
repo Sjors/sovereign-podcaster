@@ -1,0 +1,12 @@
+{
+  "transport": "ssh",
+  "ssh": "podcast-host",
+  "ssh_config": "/home/YOUR_ACCOUNT/.ssh/config",
+  "app": "/srv/castopod",
+  "user": "YOUR_APPLICATION_AUDIT_USER",
+  "incoming": "/srv/podcast-incoming",
+  "cli": "/srv/podcast-tools/castopod",
+  "php_bin": "php",
+  "maintenance_pause": "/absolute/private/maintenance.json",
+  "state_dir": "/home/YOUR_ACCOUNT/.local/state/sovereign-podcaster/castopod"
+}

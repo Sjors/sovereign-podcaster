@@ -1,0 +1,10 @@
+{
+  "d": "SHOW-EPISODE-STABLE-ID",
+  "title": "Reviewed episode title",
+  "description": "Reviewed introduction, hosts/guests and source links. Use nostr:npub or nostr:nprofile references for verified people.\n\nhttps://podcast.example.org/CHOSEN_EPISODE",
+  "announcement": "Short reviewed invitation to watch. The tool appends the native video's stable nostr:naddr link.",
+  "source_url": "https://podcast.example.org/CHOSEN_EPISODE",
+  "participants": [],
+  "announcement_mentions": [],
+  "hashtags": ["podcast"]
+}

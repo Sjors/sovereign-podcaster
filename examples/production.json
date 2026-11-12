@@ -1,0 +1,21 @@
+{
+  "show": "Example Podcast",
+  "episode": "CHOOSE_EPISODE_ID",
+  "audio": "inputs/final-audio.wav",
+  "transcript": "inputs/transcript.json",
+  "slides": "inputs/slides.json",
+  "speakers": {
+    "Host": "assets/host.png",
+    "Guest": "assets/guest.png"
+  },
+  "chapters": [{"start": 0, "title": "Introduction"}],
+  "metadata": {
+    "title": "Choose the episode title",
+    "description": "Reviewed description and source links. Chapter timestamps are appended from the edited timeline.",
+    "category_id": "28",
+    "language": "en",
+    "tags": ["podcast"],
+    "made_for_kids": false,
+    "contains_synthetic_media": false
+  }
+}
