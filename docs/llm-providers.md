@@ -80,6 +80,14 @@ steering remains available on its backend. PPQ can inspect selected image files;
 it has no built-in browser, hosted transcription service, audio interpretation
 or web-search tool. Local Whisper and source retrieval scripts remain available.
 
+For Castopod browser pages, explicitly request `Accept: text/html`; the shared
+`tools.transcribe.get(url, accept='text/html')` helper already supports this.
+Castopod also serves negotiated federation/JSON representations, so a 404 from a
+request without this header is not evidence of a broken browser page. Correct
+the read-only request before stopping for a hosting repair. A missing video tab
+before the episode has a native video is checked against its existing video
+identifier; public video playback is verified after approved linkage.
+
 Encrypted review clips also run as durable jobs, independently of the provider.
 Use `tools/jobs.py start` with kind `review-fragment` and these string parameters:
 `input`, `home`, `id`, `start`, `duration`, `account`, `group`, `caption`.
