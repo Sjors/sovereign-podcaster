@@ -366,7 +366,7 @@
       "commit": "3fb4b4759ac676b0c21c4c3527074866c9fa4c89",
       "path": "patches/marmot-message-context.patch",
       "sha256": "fad7973d8061c9bd246192a16cc1d5680a6a23052fbe4c81b6f58403162b8224",
-      "license": "MIT; see third_party/marmot/LICENSE",
+      "license": "MIT; see docs/provenance.md#marmot-license-notice",
       "purpose": "Expose authenticated incoming message/sender IDs and honor explicit successful silent turns without hiding errors or uncertain deliveries",
       "documentation": "adapters/marmot/message-context.md",
       "status": "Local adapter patch; check upstream before each release update"

@@ -21,7 +21,7 @@ the matching adapter: an older bridge ignores the event and sends its fallback.
 
 Source: [marmot-protocol/mdk](https://github.com/marmot-protocol/mdk), tag
 `wn-agent-v0.14.0`, commit `3fb4b4759ac676b0c21c4c3527074866c9fa4c89`.
-Upstream is MIT; its notice is retained in `third_party/marmot/LICENSE`.
+Upstream is MIT; its notice is retained in [the provenance document](../../docs/provenance.md#marmot-license-notice).
 The patch and exact provenance are also in the canonical patch catalog.
 Before updating the pinned release, first check upstream for equivalent message
 context support. Prefer it when available, test the environment contract and

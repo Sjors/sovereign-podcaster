@@ -86,7 +86,7 @@ The setup delegates to the upstream installer rather than vendoring the changing
 Marmot manual. [The release lock](../adapters/marmot/release.json) records the
 tested pre-release cohort, installer hash and archive provenance. Downloaded
 binaries remain outside Git. Marmot/MDK's MIT notice is retained in
-[third_party/marmot/LICENSE](../third_party/marmot/LICENSE); the upstream source
+[the Marmot license notice below](#marmot-license-notice); the upstream source
 and current agent instructions are linked from the adapter/skill. No cryptographic
 Marmot/MLS implementation is copied or replaced by this adapter.
 
@@ -144,7 +144,7 @@ review. FFmpeg (configured codec-specific licensing), Pillow (HPND), Ubuntu font
 external dependencies with their own notices; do not relabel or bundle them.
 
 The Marmot context patch targets MIT upstream code. Its upstream notice remains
-in `third_party/marmot/LICENSE`; commit, patch hash, build instructions and tests
+in [the Marmot license notice below](#marmot-license-notice); commit, patch hash, build instructions and tests
 are in the [canonical patch catalog](patches/README.md) and adapter guide.
 
 ## Local transcription port (2026-11-02)
@@ -172,3 +172,31 @@ Those copies are no longer vendored. The README and agent instructions point to
 the [upstream guidance](https://ngit.dev/agents/); optional local installations in
 those directories are ignored by Git. The ngit binaries are also installed
 separately.
+
+## Marmot license notice
+
+Retained upstream MIT notice for the Marmot/MDK adapter patch:
+
+```text
+MIT License
+
+Copyright (c) 2024-2026 Internet Privacy Foundation
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```

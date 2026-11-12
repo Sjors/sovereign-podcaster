@@ -86,3 +86,5 @@ and uncertain deliveries retain their existing handling. The [build/install guid
 records dependencies, tests, source pin and rollback requirements. The source
 snapshot above records its SHA-256. Check upstream for this functionality before
 updating/removing the patch; other accounts' installed bridges are not replaced.
+The upstream [MIT notice](../provenance.md#marmot-license-notice) is retained in
+the provenance document.

@@ -28,7 +28,7 @@ digests. Setup verifies the installer against that pin and its adjacent checksum
 then delegates to upstream's installer, which verifies its binary downloads.
 Review a new release and rerun acceptance checks before changing the pin; do not
 automatically follow a nightly. Upstream's MIT notice is retained in
-[third_party/marmot](../../third_party/marmot/LICENSE).
+[the provenance document](../../docs/provenance.md#marmot-license-notice).
 
 For this project's Agents API experiment, `wn-codex` is the conversation/process
 harness. Its `WN_CODEX_BIN` points to [marmot-backend.py](../openai-agents/marmot-backend.py),
