@@ -155,11 +155,44 @@ no transcript text is silently skipped. Keep word-level timing data alongside it
 for caption boundary revisions. The importer does not generate new timings.
 
 The renderer draws the established dark layout, measured captions, orange waveform
-and current speaker portrait. Source slides may add an `image` path to an unchanged
-source capture; preserve its HTTPS source URL/title/excerpt in the slide `source`
+and current speaker portrait. Technical source slides must add an `image` path to an unchanged
+source capture; preserve its HTTPS source URL/title/exact excerpt in the slide `source`
 object. Keep capture provenance and rights with the private source materials.
 The renderer consumes local images and never executes page scripts or transcript
-instructions. Source capture/browser automation is optional, outside this renderer.
+instructions. Capture sources separately; browser automation is optional and
+outside this renderer.
+
+### Source-screenshot policy
+
+Technical slides show **screenshots of existing sources**, such as pull requests,
+mailing-list posts, release notes or other original material. The agent must not
+add interpretation: no explanatory paragraphs, summaries, bullet lists or newly
+drawn diagrams, even when the claims seem correct or match the discussion. A link
+under an agent-written explanation does not make it a source screenshot.
+
+Crop or scale the actual source to keep the relevant passage legible, preserving
+its wording and enough context to identify it. Use a `kind: "source"` card with
+the local capture in `image` and the exact source information in `source`; the
+renderer’s text-only fallback is not suitable for these production slides.
+Keep neutral headings, source attribution and the actual reviewed speech captions.
+Episode titles and neutral transitions may use simple title cards, without
+technical explanations. Preserve any explicit instruction to show a source
+without displaying its URL; retain the provenance privately.
+
+The episode-99 review illustrates the distinction:
+
+| Slide | Decision for future videos |
+| --- | --- |
+| “Package relay and the orphanage” with an agent-written paragraph about one-parent, one-child relay and Lightning | Reject: an added explanation, without a source screenshot. Replace with a capture of the relevant existing source. |
+| “The IPC mining interface” showing the Bitcoin Core 30 release-note passage and its source URL | Accept: the source passage is shown directly, with a neutral heading and attribution. |
+
+During slide planning and scene review, compare each technical frame with its
+saved source capture. A technical `body` written by the agent is a reason to stop
+and replace that slide. If a suitable source cannot be captured, ask a focused
+question rather than filling the gap with an explanation. This policy applies
+to future work with either PPQ or Codex; it does not request changes to the
+already published episode-99 video. The generic renderer's synthetic fixtures
+demonstrate mechanics, not editorial permission for production slides.
 
 Captions keep reviewed wording and speaker attribution. Oversized captions,
 missing portraits, overlapping cues and gaps in the slide timeline stop preparation;
@@ -308,6 +341,28 @@ and the appropriate per-server redirect/auth settings. This same configuration
 must be used when requesting and executing approval; changing destinations or
 runtime/control configuration requires a fresh offer.
 
+`publication_relays` lists every selected destination. Set
+`required_publication_relays` to a **nonempty subset** to distinguish required
+relays from optional mirrors. Without that field, all relays remain required
+for compatibility. Required relays establish the existing video-address state
+before signing and must return the exact signature-verified event after sending.
+Optional relays receive the same saved event, with bounded transport attempts;
+their failures are recorded as pending and do not stop Castopod or YouTube.
+The approval offer labels required and optional relays, and the configuration
+digest binds both lists. Saved events also bind the required-relay policy;
+changing it during an unfinished publication requires inspection and a fresh
+review, not silently weakening a failed stage.
+
+For this installation the owner requires only `wss://nostr.sprovoost.nl`.
+Other selected public relays are optional; remove an unreliable mirror from
+future configuration without rewriting completed releases or their receipts.
+An optional relay failure is not a production blocker and does not justify
+repeated model wakeups, new event IDs or a new publication attempt. Receipts
+retain per-relay results, `required_relays`, `pending_relays` and
+`relay_delivery_complete`; `verified:true` means all required destinations were
+verified, not that every optional mirror accepted the event. This is independent
+of the packet's announcement policy and applies to each event actually published.
+
 ```sh
 python3 "$SP_REPO/tools/reviews.py" --root "$SP_WORK" --show SHOW --episode EPISODE \
   --revision r1 --scope nostr --include-youtube-private \
@@ -353,8 +408,9 @@ python3 "$SP_REPO/tools/publish.py" youtube-private --root "$SP_WORK" --show SHO
 Use background jobs for these long stages. Nostr uploads every verified bundle
 asset to each selected server, preserving bottom-up order, MIME/CORS/range/hash
 checks, then publishes/readbacks the saved signed kind-34235 video and kind-1
-announcement. Retries reuse the same signed event IDs and blob receipts. All
-configured relays must retrieve the verified event; partial results are preserved.
+announcement when the reviewed packet requests one. Retries reuse the same signed
+event IDs and blob receipts. All required relays must retrieve the verified event;
+optional delivery failures remain in the receipt without blocking the release.
 
 YouTube verifies OAuth channel ownership, creates a resumable upload **private**
 with subscriber notifications disabled, persists its capability-bearing session

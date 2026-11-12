@@ -1,6 +1,24 @@
-"""Reviewed native-video and announcement metadata; no network or text rewriting."""
+"""Reviewed native-video metadata and relay policy; no network or text rewriting."""
 import re
 from urllib.parse import urlsplit
+
+
+def relay_policy(config):
+    """Require an explicit nonempty subset; legacy configurations require all relays."""
+    relays = config['publication_relays']
+    required = config.get('required_publication_relays', relays)
+    for values in (relays, required):
+        if not isinstance(values, list) or not values or any(not isinstance(v, str) for v in values):
+            raise ValueError('Publication and required relays must be nonempty lists of wss:// URLs')
+        for value in values:
+            url = urlsplit(value)
+            if url.scheme != 'wss' or not url.hostname or url.username is not None or url.password is not None or url.query or url.fragment:
+                raise ValueError('Publication relays must be wss:// URLs without credentials, queries or fragments')
+        if len(values) != len(set(values)):
+            raise ValueError('Publication relay lists must be distinct')
+    if not set(required) <= set(relays):
+        raise ValueError('Required publication relays must be selected publication destinations')
+    return relays, required
 
 
 def metadata(value):

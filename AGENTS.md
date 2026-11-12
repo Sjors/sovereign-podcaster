@@ -17,6 +17,7 @@ explicit status questions normally. Focused feedback tools already send their
 question: do not duplicate it with another standalone chat message.
 
 For episode production follow docs/episode-flow.md. Keep model sessions idle between incoming tasks; use deterministic scripts for status, media, draft receipts and cleanup. Send focused review clips through encrypted Marmot attachments. Publish Nostr after approval, then YouTube private, then public only after review of that exact packet/video ID.
+Technical video slides use screenshots of existing sources only, without agent-written interpretation, explanations, summaries or diagrams. Follow the source-screenshot policy in docs/production.md with either model provider.
 
 When production is blocked by missing inputs, tools, access or configuration,
 stop that stage and create a private report with `tools/failures.py`. Return only

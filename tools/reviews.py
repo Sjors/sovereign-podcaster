@@ -9,7 +9,7 @@ import sys
 import uuid
 import episodes as e
 import failures
-from video.nostr import metadata as nostr_metadata
+from video.nostr import metadata as nostr_metadata, relay_policy
 
 SCOPES=('nostr','youtube-private','youtube-public','draft-upload')
 
@@ -44,7 +44,8 @@ def request(root,data,item,revision,scope,route,config,send=False,include_youtub
     elif include_youtube_private:text+='This approval also authorizes the following private YouTube upload (not public release). Full packet SHA256: '+r['manifest_sha256']+'\n'
     if private:text+='Private YouTube video: https://www.youtube.com/watch?v='+private['receipt']['video_id']+'\n'
     if scope=='nostr':
-        text+='Nostr identity: '+config['expected_pubkey']+'\nStorage: '+', '.join(config['publication_servers'])+'\nRelays: '+', '.join(config['publication_relays'])+'\nNostr title: '+nostr['title']+'\nDescription:\n'+nostr['description']+'\nAnnouncement:\n'+(nostr['announcement'] if nostr.get('announce',True) else 'NONE — native video only; no kind-1 announcement will be created.')+'\n'
+        relays,required=relay_policy(config)
+        text+='Nostr identity: '+config['expected_pubkey']+'\nStorage: '+', '.join(config['publication_servers'])+'\nRequired relays: '+', '.join(required)+'\nOptional relays: '+(', '.join(x for x in relays if x not in required) or 'none')+'\nNostr title: '+nostr['title']+'\nDescription:\n'+nostr['description']+'\nAnnouncement:\n'+(nostr['announcement'] if nostr.get('announce',True) else 'NONE — native video only; no kind-1 announcement will be created.')+'\n'
         text+='Video participant p tags: '+', '.join(nostr.get('participants',[]))+'\nAnnouncement mention p tags: '+', '.join(nostr.get('announcement_mentions',[]))+'\nSource reference: '+nostr.get('source_url','')+'\nHashtags: '+', '.join(nostr.get('hashtags',[]))+'\n'
         if item.get('video_task'):text+='This approval also authorizes adding this native video to that existing Castopod episode, preserving its audio, transcript and identity.\n'
     if scope.startswith('youtube') or include_youtube_private:text+='YouTube channel: '+config['youtube_channel_id']+'\n'

@@ -15,7 +15,7 @@ import failures
 import blossom
 import reviews
 from video import hls
-from video.nostr import metadata as nostr_metadata
+from video.nostr import metadata as nostr_metadata, relay_policy
 
 HERE=Path(__file__).resolve().parent
 
@@ -52,7 +52,8 @@ def nostr(config,r,sha,folder,check,phase='all',castopod_receipt=None):
     if identity['pubkey']!=config['expected_pubkey']:raise ValueError('Nostr destination identity mismatch')
     servers=[blossom.normalize_server(x) for x in config['publication_servers']]
     if not servers or len(set(servers))!=len(servers):raise ValueError('Explicit distinct publication servers are required')
-    relays=signer.relay_urls(config['publication_relays'])
+    relays,required=relay_policy(config)
+    relays=signer.relay_urls(relays)
     meta=nostr_metadata(e.read(r['files']['nostr_metadata']['path']))
     announce=meta.get('announce',True)
     if phase=='announcement' and not announce:raise ValueError('This reviewed packet forbids announcements')
@@ -62,7 +63,9 @@ def nostr(config,r,sha,folder,check,phase='all',castopod_receipt=None):
     else:
         stamp=int(time.time());published=meta.get('published_at',stamp)
         found=[]
-        for relay in relays:
+        # Required relays are authoritative for address updates. An optional
+        # mirror's outage must not prevent establishing that state or signing.
+        for relay in required:
             check();existing=signer.query_relay(relay,{'authors':[identity['pubkey']],'kinds':[34235],'#d':[meta['d']]})
             if not existing.get('complete'):raise RuntimeError('Cannot establish current video address state; inspect relay before publishing')
             found.extend(existing['events'])
@@ -83,13 +86,14 @@ def nostr(config,r,sha,folder,check,phase='all',castopod_receipt=None):
         identifier=meta['d'].encode()
         if len(identifier)>255:raise ValueError('Video d identifier exceeds NIP-19 TLV size')
         tlv=bytes([0,len(identifier)])+identifier+bytes([2,32])+bytes.fromhex(identity['pubkey'])+bytes([3,4])+(34235).to_bytes(4,'big')
-        for relay in relays[:2]:
+        for relay in (required+[x for x in relays if x not in required])[:2]:
             encoded=relay.encode()
             if len(encoded)<=255:tlv+=bytes([1,len(encoded)])+encoded
         note_id=signer.bech32_encode('naddr',signer.convertbits(tlv,8,5))
         note=signer.sign_event(Path(config['identity_file']),dict(pubkey=identity['pubkey'],created_at=stamp,kind=1,tags=[['a',address],['e',video['id']],*hls.media_tags(bundle,servers),*(['p',key] for key in meta.get('announcement_mentions',[]))],content=meta['announcement']+'\n\nnostr:'+note_id)) if announce else None
-        events=dict(manifest_sha256=sha,servers=servers,relays=relays,video=video,announcement=note,identifier=note_id);e.save(stamp_path,events)
+        events=dict(manifest_sha256=sha,servers=servers,relays=relays,required_relays=required,video=video,announcement=note,identifier=note_id);e.save(stamp_path,events)
     if events['manifest_sha256']!=sha or events['servers']!=servers or events['relays']!=relays:raise ValueError('Saved signed publication belongs to different artifacts/destinations')
+    if events.get('required_relays',events['relays'])!=required:raise ValueError('Saved signed publication belongs to a different required relay policy')
     if bool(events.get('announcement'))!=announce:raise ValueError('Saved announcement policy differs from the reviewed metadata')
     for event in (events['video'],events['announcement']):
         if event is None:continue
@@ -111,11 +115,20 @@ def nostr(config,r,sha,folder,check,phase='all',castopod_receipt=None):
         receipt.update(manifest_sha256=sha,relays={})
     for role in (('announcement',) if phase=='announcement' else ('video',) if phase=='video' or not announce else ('video','announcement')):
         event=events[role];checks={}
-        for relay in relays:
-            check();result=signer.publish_and_check(relay,event);checks[relay]=result
+        for relay in required+[x for x in relays if x not in required]:
+            check()
+            try:result=signer.publish_and_check(relay,event)
+            except Exception as exc:
+                # Keep transport failures private and truthful. Operational
+                # checks run outside this handler and always stop publication.
+                result=dict(accepted=False,retrieved=False,error_type=type(exc).__name__)
+            checks[relay]=result
             e.save(folder/(role+'-relays.json'),checks)
-        if not all(x.get('retrieved') for x in checks.values()):raise RuntimeError('Nostr relay readback incomplete; resume these saved event IDs')
+            if relay in required and result.get('retrieved') is not True:raise RuntimeError('Required Nostr relay readback incomplete; resume these saved event IDs')
         receipt['relays'][role]=checks;receipt[role+'_event_id']=event['id']
+    receipt['required_relays']=required
+    receipt['pending_relays']=[relay for relay in relays if any(results.get(relay,{}).get('retrieved') is not True for results in receipt['relays'].values())]
+    receipt['relay_delivery_complete']=not receipt['pending_relays']
     receipt.update(verified=True,verified_at=e.now())
     receipt['identifier']=events.get('identifier') or events['announcement']['content'].rsplit('nostr:',1)[-1]
     if not announce:receipt['announcement_skipped']=True

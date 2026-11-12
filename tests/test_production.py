@@ -24,11 +24,21 @@ from array import array
 import math
 from video.verify_mp4 import alignment
 from video import hls, av1_packaging, youtube
-from video.nostr import metadata as nostr_metadata
+from video.nostr import metadata as nostr_metadata, relay_policy
 
 class ProductionTests(unittest.TestCase):
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup);self.root=Path(self.tmp.name);self.root.chmod(0o700)
+
+    def test_relay_policy_requires_a_nonempty_selected_subset_and_preserves_legacy(self):
+        relays=['wss://own.example.org','wss://mirror.example.org']
+        self.assertEqual(relay_policy(dict(publication_relays=relays)),(relays,relays))
+        self.assertEqual(relay_policy(dict(publication_relays=relays,required_publication_relays=relays[:1])),(relays,relays[:1]))
+        for required in ([],None,'wss://own.example.org',['wss://elsewhere.example.org'],[relays[0],relays[0]],['ws://own.example.org'],['wss://user:secret@own.example.org']):
+            with self.subTest(required=required),self.assertRaises(ValueError):
+                relay_policy(dict(publication_relays=relays,required_publication_relays=required))
+        for selected in ([],None,'wss://own.example.org',[relays[0],relays[0]],['wss://own.example.org?token=value']):
+            with self.subTest(selected=selected),self.assertRaises(ValueError):relay_policy(dict(publication_relays=selected))
 
     def test_edits_preserve_words_and_reject_a_cut_crossing_a_cue(self):
         cues=[dict(start=1,end=3,speaker='host',text='Whole sentence.'),dict(start=6,end=8,speaker='guest',text='Keep me too.')]
@@ -207,6 +217,59 @@ class ProductionTests(unittest.TestCase):
             self.assertEqual(signer.publish_and_check.call_count,1)
             with self.assertRaisesRegex(ValueError,'forbids announcements'):publish.nostr(config,r,'c'*64,quiet,lambda:None,phase='announcement')
 
+        # Optional mirrors cannot gate preflight or successful publication. Keep
+        # their honest failure results, and resume exactly the saved event ID.
+        own=config['publication_relays'][0];optional=['wss://slow.example.org','wss://offline.example.org']
+        selective=dict(config,publication_relays=optional+[own],required_publication_relays=[own])
+        def query_required(relay,filters):
+            if relay!=own:raise AssertionError('Optional relay must not gate address preflight')
+            return dict(complete=True,events=[])
+        def deliver(relay,event):
+            if relay==optional[1]:raise TimeoutError('Unavailable optional mirror')
+            return dict(accepted=relay==own,retrieved=relay==own)
+        for announce in (False,True):
+            with self.subTest(announce=announce):
+                value.update(announce=announce,announcement='Watch.' if announce else '');e.save(meta,value)
+                mirror_folder=self.root/('mirrors-'+str(announce));mirror_folder.mkdir()
+                signer.reset_mock();signer.query_relay.side_effect=query_required;signer.publish_and_check.side_effect=deliver
+                with patch.object(publish,'module',return_value=signer),patch.object(hls,'validate_bundle',return_value=bundle),patch.object(publish,'nostr_assets',return_value=dict(blobs=[])):
+                    partial=publish.nostr(selective,r,'d'*64,mirror_folder,lambda:None)
+                    self.assertTrue(partial['verified']);self.assertFalse(partial['relay_delivery_complete'])
+                    self.assertEqual(partial['required_relays'],[own]);self.assertEqual(partial['pending_relays'],optional)
+                    self.assertEqual(signer.query_relay.call_count,1)
+                    roles=['video','announcement'] if announce else ['video']
+                    for role in roles:
+                        self.assertTrue(partial['relays'][role][own]['retrieved'])
+                        self.assertEqual(partial['relays'][role][optional[1]]['error_type'],'TimeoutError')
+                    self.assertEqual([call.args[0] for call in signer.publish_and_check.call_args_list],([own]+optional)*len(roles))
+                    saved=e.read(mirror_folder/'events.json')
+                    signer.publish_and_check.side_effect=None
+                    resumed=publish.nostr(selective,r,'d'*64,mirror_folder,lambda:None)
+                    self.assertTrue(resumed['relay_delivery_complete']);self.assertEqual(resumed['pending_relays'],[])
+                    self.assertEqual(saved,e.read(mirror_folder/'events.json'))
+                    self.assertEqual(signer.sign_event.call_count,len(roles))
+                    with self.assertRaisesRegex(ValueError,'required relay policy'):
+                        publish.nostr(dict(selective,required_publication_relays=selective['publication_relays']),r,'d'*64,mirror_folder,lambda:None)
+
+        # An optional success never substitutes for the required relay. Default
+        # configurations continue requiring every selected relay.
+        for required_config in (selective,dict(config,publication_relays=[own]+optional)):
+            failed=self.root/('failure-'+str(len(list(self.root.iterdir()))));failed.mkdir()
+            signer.query_relay.side_effect=None;signer.query_relay.return_value=dict(complete=True,events=[])
+            signer.publish_and_check.side_effect=lambda relay,event:dict(accepted=True,retrieved=relay!=own)
+            with patch.object(publish,'module',return_value=signer),patch.object(hls,'validate_bundle',return_value=bundle),patch.object(publish,'nostr_assets',return_value=dict(blobs=[])):
+                with self.assertRaisesRegex(RuntimeError,'Required Nostr relay readback incomplete'):
+                    publish.nostr(required_config,r,'e'*64,failed,lambda:None)
+                self.assertTrue((failed/'events.json').exists())
+                self.assertFalse(e.read(failed/'video-relays.json')[own]['retrieved'])
+                self.assertFalse((failed/'receipt.json').exists())
+        blocked=self.root/'preflight-blocked';blocked.mkdir();signer.reset_mock()
+        signer.query_relay.return_value=dict(complete=False,events=[])
+        with patch.object(publish,'module',return_value=signer),patch.object(hls,'validate_bundle',return_value=bundle),patch.object(publish,'nostr_assets') as assets:
+            with self.assertRaisesRegex(RuntimeError,'current video address state'):
+                publish.nostr(selective,r,'f'*64,blocked,lambda:None)
+            signer.sign_event.assert_not_called();assets.assert_not_called()
+
     def test_full_release_approval_binds_verified_private_id_without_another_human_message(self):
         data,item,r=self.episode();route=dict(account='a'*64,group='b'*64);config={}
         packet=reviews.request(self.root,data,item,'r1','nostr',route,config,include_youtube_public=True)
@@ -253,7 +316,7 @@ class ProductionTests(unittest.TestCase):
         data,item,r=self.episode();path=Path(r['files']['nostr_metadata']['path'])
         meta=e.read(path);meta.update(participants=['b'*64],announcement_mentions=['c'*64],source_url='https://podcast.example.org/one',hashtags=['bitcoin'])
         e.save(path,meta);r=e.revision(item,'r2',{k:v['path'] for k,v in r['files'].items()})
-        config=dict(expected_pubkey='a'*64,publication_servers=['https://example.org'],publication_relays=['wss://relay.example.org'],marmot_home='/fixture')
+        config=dict(expected_pubkey='a'*64,publication_servers=['https://example.org'],publication_relays=['wss://relay.example.org','wss://mirror.example.org'],required_publication_relays=['wss://relay.example.org'],marmot_home='/fixture')
         route=dict(account='a'*64,group='b'*64)
         with patch.object(reviews.subprocess,'check_output',return_value=json.dumps(dict(response=dict(message_ids_hex=['f'*64]))).encode()):
             packet=reviews.request(self.root,data,item,'r2','nostr',route,config,send=True)
@@ -262,9 +325,12 @@ class ProductionTests(unittest.TestCase):
         self.assertIn('Announcement mention p tags: '+'c'*64,message)
         self.assertIn('Source reference: https://podcast.example.org/one',message)
         self.assertIn('Hashtags: bitcoin',message)
+        self.assertIn('Required relays: wss://relay.example.org',message)
+        self.assertIn('Optional relays: wss://mirror.example.org',message)
         incoming=dict(**route,sender='c'*64,message_id='d'*64,text='approve '+packet['id'],recorded_at=1,reply_to=None)
         reviews.accept(self.root,data,incoming)
         reviews.require(item,'nostr',r['nostr_manifest_sha256'],config)
+        with self.assertRaises(ValueError):reviews.require(item,'nostr',r['nostr_manifest_sha256'],dict(config,required_publication_relays=config['publication_relays']))
         meta['announcement_mentions']=['d'*64];e.save(path,meta)
         with self.assertRaises(ValueError):reviews.accept(self.root,data,incoming)
         changed=e.revision(item,'r3',{k:v['path'] for k,v in r['files'].items()})

@@ -137,7 +137,14 @@ verify a provider. Receipts require `verified:true` and `manifest_sha256` matchi
 the appropriate stage digest. Nostr receipts contain `video_event_id`,
 `announcement_event_id` and **all** final `blobs` as `{server,sha256}` entries
 using canonical bare HTTPS origins. Preserve raw signed events, relay readback
-and storage checks as separate evidence. YouTube receipts contain `video_id`,
+and storage checks as separate evidence. `required_publication_relays` selects
+the nonempty required subset of `publication_relays` (all are required if omitted).
+Required relays must verify retrieval; optional failures remain in `pending_relays`
+and do not prevent subsequent stages. Do not describe partial optional delivery
+as complete. Both lists are bound to the exact reviewed configuration.
+Technical video slides must follow the [source-screenshot policy](production.md#source-screenshot-policy):
+existing source captures, without agent-written interpretation or explanations.
+YouTube receipts contain `video_id`,
 `channel_id` and `privacy_status` (`private` or `public`), plus actual processing,
 thumbnail/caption/metadata readback evidence. Use the existing channel helper,
 shared mutation lock and [YouTube operations](../skills/youtube-publishing/references/operations.md).

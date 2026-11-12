@@ -15,6 +15,9 @@
     "wss://relay.example.org",
     "wss://ANOTHER_RELAY"
   ],
+  "required_publication_relays": [
+    "wss://relay.example.org"
+  ],
   "playback_origins": [
     "https://YOUR_PLAYER_ORIGIN"
   ],

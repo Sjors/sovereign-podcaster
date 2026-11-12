@@ -17,8 +17,12 @@ Review opening, representative middle passages, chapter boundaries, Q&A and EOF.
 
 Respect source-display versus source-link instructions separately. For a page the
 user wants shown without linking, suppress the displayed URL and public description
-link, while retaining the source privately for provenance. Use actual source
-captures for technical material rather than inventing a new explanatory diagram.
+link, while retaining the source privately for provenance. Use only screenshots of
+existing sources for technical slides. Do not replace a
+capture with agent-written explanations, summaries, bullets or diagrams. Preserve
+source wording and context; only neutral headings and actual reviewed speech
+captions accompany the capture. See the production runbook's source-screenshot
+policy, including the episode-99 failure and accepted example.
 Match the approved event/location wording across thumbnail and descriptions.
 
 ## Revise efficiently without changing approved audio
