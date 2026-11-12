@@ -6,6 +6,10 @@ runs/
 *.pem
 *.key
 
+# Optional ngit guidance is installed locally from upstream.
+/.agents/skills/ngit/
+/.claude/skills/ngit/
+
 # Private runtime state and accidental credential/media exports.
 /private/
 /state/

@@ -68,9 +68,10 @@ harnesses, podcast hosting providers, Nostr relay software and Blossom storage
 implementations. Improvements to the tools, skills, documentation and
 reproducibility are welcome too.
 
-For coding agents collaborating over Nostr, run `ngit skill install` inside
-the checkout to install or refresh ngit's bundled agent guidance. The installed
-[skill](.agents/skills/ngit/SKILL.md) documents issues, pull requests and reviews.
+For coding agents collaborating over Nostr, follow the upstream
+[ngit agent guidance](https://ngit.dev/agents/). Optionally run
+`ngit skill install` inside the checkout; locally installed skill copies are
+ignored by Git rather than vendored here.
 Use the `nostr` remote for Nostr collaboration and `origin` for GitHub.
 
 Keep integrations configurable and put harness-specific code in adapters.

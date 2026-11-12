@@ -59,8 +59,10 @@ episode identity; report the deterministic count/link only after public
 verification. Keep the backfill queue idle unless the owner explicitly authorizes it.
 Backfill queuing requires separate authorization and runs newest to oldest.
 
-For Nostr repository collaboration, run `ngit skill install` to install or refresh
-the bundled guidance, then follow `.agents/skills/ngit/SKILL.md`. GitHub stores
+For Nostr repository collaboration, follow the upstream agent guidance at
+https://ngit.dev/agents/ and use `ngit <command> --help` for installed-version flags.
+Optional `ngit skill install` copies are local and ignored by Git; do not vendor
+them in this repository. GitHub stores
 the code and branch state (`nostr.nostate=true`); issues and pull requests are
 also available through GitWorkshop. Where configured, use the `nostr` remote
 for Nostr collaboration and `origin` for GitHub. Signing and publication remain
