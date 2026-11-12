@@ -342,6 +342,25 @@ class YoutubeTests(unittest.TestCase):
         self.service=Mock();self.service.videos().insert.return_value=types.SimpleNamespace(uri='https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable',body='{}',headers={'Content-Type':'application/json'})
     def response(self,status,**headers):return type('Response',(dict,),{'status':status})(headers)
 
+    def test_thumbnail_readback_accepts_different_urls_only_for_identical_preferred_image(self):
+        updated='https://i.ytimg.com/vi/fixture/maxresdefault.jpg?version=one'
+        served='https://i.ytimg.com/vi/fixture/maxresdefault.jpg?version=two'
+        response=dict(items=[dict(maxres=dict(url=updated,width=1280,height=720))])
+        video=dict(snippet=dict(thumbnails=dict(maxres=dict(url=served,width=1280,height=720))))
+        class Download:
+            def __init__(self,body):self.body=body;self.headers=Mock();self.headers.get_content_type.return_value='image/jpeg'
+            def __enter__(self):return self
+            def __exit__(self,*args):pass
+            def read(self,*args):return self.body
+        opener=Mock();images={updated:b'same reviewed thumbnail',served:b'same reviewed thumbnail'}
+        opener.open.side_effect=lambda url,**kw:Download(images[url])
+        with patch.object(youtube.urllib.request,'build_opener',return_value=opener):
+            self.assertEqual(youtube.thumbnail_readback(response,video),__import__('hashlib').sha256(images[served]).hexdigest())
+            images[served]=b'different image'
+            self.assertIsNone(youtube.thumbnail_readback(response,video))
+        response['items'][0]={'high':dict(url=updated,width=480,height=360)}
+        self.assertIsNone(youtube.thumbnail_readback(response,video))
+
     def test_caption_polling_binds_video_and_waits_for_nonempty_download_without_reinsertion(self):
         captions=self.root/'reviewed.vtt';captions.write_text('WEBVTT\n\n00:00:00.000 --> 00:00:02.000\nReviewed words.\n')
         self.packet['files']['captions']=e.file_record(captions)

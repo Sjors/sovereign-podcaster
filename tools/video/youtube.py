@@ -126,6 +126,19 @@ def thumbnail_bytes(video):
         if len(raw)>8*1024*1024 or response.headers.get_content_type() not in ('image/jpeg','image/png','image/webp'):raise ValueError('Invalid thumbnail response')
     return hashlib.sha256(raw).hexdigest()
 
+def thumbnail_readback(response,video):
+    actual=video.get('snippet',{}).get('thumbnails',{})
+    for variant in ('maxres','standard','high'):
+        if not actual.get(variant):continue
+        returned=next((item[variant] for item in response.get('items',[]) if isinstance(item.get(variant),dict)),None)
+        if not returned or (returned.get('width'),returned.get('height'))!=(actual[variant].get('width'),actual[variant].get('height')):return None
+        # YouTube can give the upload and video APIs different signed URLs for
+        # identical transformed images. Verify the preferred image, not its URL.
+        expected=thumbnail_bytes(dict(snippet=dict(thumbnails={'high':returned})))
+        observed=thumbnail_bytes(video)
+        return observed if expected==observed else None
+    return None
+
 def wait_processed(service,video_id,packet,check):
     access=sdk();deadline=time.monotonic()+packet.get('processing_timeout_seconds',1800)
     while True:
@@ -206,10 +219,9 @@ def private(service,packet,folder,check):
     track=caption_ready(service,video_id,packet,folder,check,allow_update=True)
     video=validate_readback(access.owned_video(service,video_id,packet['channel_id'],part='snippet,status,processingDetails'),packet,'private')
     thumb=e.read(state_path)
-    returned={x.get('url') for item in thumb['response'].get('items',[]) for x in item.values() if isinstance(x,dict)}
-    actual={x.get('url') for x in video['snippet'].get('thumbnails',{}).values()}
-    if not returned or not actual.intersection(returned):raise RuntimeError('Thumbnail readback is not available yet; resume this stage later')
-    return dict(video_id=video_id,channel_id=packet['channel_id'],privacy_status='private',verified=True,caption_id=track['id'],thumbnail_source=packet['files']['thumbnail'],metadata=packet['metadata'],video_source=packet['files']['video'],readback=video,thumbnail_readback_sha256=thumbnail_bytes(video),caption_readback_sha256=track['verified_cues_sha256'],
+    thumbnail_sha=thumbnail_readback(thumb['response'],video)
+    if not thumbnail_sha:raise RuntimeError('Thumbnail readback is not available yet; resume this stage later')
+    return dict(video_id=video_id,channel_id=packet['channel_id'],privacy_status='private',verified=True,caption_id=track['id'],thumbnail_source=packet['files']['thumbnail'],metadata=packet['metadata'],video_source=packet['files']['video'],readback=video,thumbnail_readback_sha256=thumbnail_sha,caption_readback_sha256=track['verified_cues_sha256'],
                 limitation='YouTube transforms uploaded media and thumbnails. API resource/processing readback does not prove phone playback or byte-identical transcoding.')
 
 def public(service,packet,private_receipt,folder,check):
