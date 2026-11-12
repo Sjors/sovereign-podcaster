@@ -319,6 +319,18 @@ class ProductionTests(unittest.TestCase):
         self.assertFalse({'OPENAI_API_KEY','CODEX_API_KEY','SSH_AUTH_SOCK'}&jobs.clean_env().keys())
         with self.assertRaises(ValueError):jobs.command(dict(kind='shell',parameters=dict(command='anything')))
 
+    def test_youtube_jobs_use_configured_sdk_runtime_without_changing_upload_scope(self):
+        config=self.root/'publication.json';e.save(config,dict(youtube_python=sys.executable))
+        for kind in ('youtube-private','youtube-public'):
+            params=dict(root=str(self.root/'work'),show='fixture',episode='99',revision='r2',config=str(config))
+            command=jobs.command(dict(kind=kind,parameters=params,apply=True))
+            self.assertEqual(command[0],sys.executable);self.assertEqual(command[2],kind);self.assertEqual(command[-1],'--apply')
+            for key,value in params.items():self.assertEqual(command[command.index('--'+key)+1],value)
+        e.save(config,dict(youtube_python='python3'))
+        with self.assertRaises(ValueError):jobs.command(dict(kind='youtube-private',parameters=params,apply=True))
+        e.save(config,{})
+        with self.assertRaises(ValueError):jobs.command(dict(kind='youtube-private',parameters=params,apply=True))
+
 class YoutubeTests(unittest.TestCase):
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup);self.root=Path(self.tmp.name)

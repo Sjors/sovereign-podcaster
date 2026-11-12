@@ -46,6 +46,11 @@ def command(request):
         result=['nice','-n','10',runtime,str(HERE/script),'--config',values['config'],action,'--folder',values['folder'],'--clusters',values['clusters']]
     if script=='episodes.py':
         result=[sys.executable,str(HERE/script),'--root',values['root'],action,*[x for k,v in values.items() if k!='root' for x in ('--'+k,v)]]
+    if kind in ('youtube-private','youtube-public'):
+        runtime=e.read(values['config']).get('youtube_python')
+        if not isinstance(runtime,str) or not Path(runtime).is_absolute() or not os.access(runtime,os.X_OK):
+            raise ValueError('Configured YouTube Python must be an executable absolute path')
+        result[0]=runtime
     if request.get('apply') is True:
         if not kind.startswith('youtube') and kind!='nostr' and not kind.startswith('draft-'):raise ValueError('Apply only belongs to publishing jobs')
         result.append('--apply')
