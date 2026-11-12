@@ -39,14 +39,22 @@ Register the exact render/bundle/metadata with `produce.py register`. Full draft
 uploads use the 480p AV1/AAC fallback and `episodes.py` draft receipts. For focused
 questions, use `review_media.py fragment` and the user's selected review channel.
 Local desktop review does not require an upload or White Noise send. When Marmot
-is selected, use its encrypted attachment helper rather than a public fragment URL.
+is selected, use its encrypted attachment helper for focused clips. For final
+video approval, stage the full registered fallback with a tracked `draft-upload`
+job under the selected episode authorization and maintenance control. The final
+offer includes its verified Blossom `.mp4` link; anyone with this link can watch.
+This temporary preview is separate from publishing a Nostr video or announcement.
 
 Prepare Nostr metadata using the [Nostr publishing skill](../nostr-publishing/SKILL.md):
 the native video carries the complete introduction, verified people mentions and visible
 episode/source links; the kind-1 announcement is a short invitation linking to that video.
 Select native participant tags and announcement notification tags explicitly before review.
 
-Offer exact publication packets with `reviews.py`; authenticated incoming replies
+Offer exact publication packets with `reviews.py` only after the full preview
+has verified. It shows the watch link first, release actions and announcement
+policy in plain language, and the exact metadata; hashes and transport details
+stay in saved review state. A short review clip does not replace the full preview.
+Authenticated incoming replies
 are consumed by the controller. For a direct maintainer instruction in trusted
 desktop chat, use the truthful local operator path in the revision reference;
 do not invent Marmot authentication. Use a combined Nostr/private-YouTube offer when

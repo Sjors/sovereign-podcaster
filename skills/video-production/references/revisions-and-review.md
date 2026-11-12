@@ -43,6 +43,17 @@ identical-content render review solely for a higher resolution.
 
 ## Approval and publication handoff
 
+Before the final publication offer, upload the complete registered 480p fallback
+as a tracked Blossom draft, using the selected episode authorization and the
+`draft-upload` maintenance control. `reviews.py` requires its matching full-byte,
+MIME, CORS and range-read receipts and rechecks the `.mp4` link before sending.
+The offer starts with the full-preview link and clearly states Nostr/Nostube,
+Castopod, YouTube and announcement actions. Keep focused question clips encrypted;
+they do not substitute for a full final preview. The temporary preview link is
+accessible to anyone who has it. Nostr events and YouTube publication still wait
+for the corresponding approval. Keep technical hashes and destination evidence
+in saved review state, rather than filling the phone message with them.
+
 Bind the actual approval to the exact selected files and destinations. An explicit
 human approval in trusted desktop chat is not an authenticated Marmot message.
 In sovereign-podcaster, the local operator path is `tools/reviews_operator.py`;

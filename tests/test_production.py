@@ -318,15 +318,16 @@ class ProductionTests(unittest.TestCase):
         e.save(path,meta);r=e.revision(item,'r2',{k:v['path'] for k,v in r['files'].items()})
         config=dict(expected_pubkey='a'*64,publication_servers=['https://example.org'],publication_relays=['wss://relay.example.org','wss://mirror.example.org'],required_publication_relays=['wss://relay.example.org'],marmot_home='/fixture')
         route=dict(account='a'*64,group='b'*64)
-        with patch.object(reviews.subprocess,'check_output',return_value=json.dumps(dict(response=dict(message_ids_hex=['f'*64]))).encode()):
+        with patch.object(reviews,'preview',return_value=dict(kind='blossom',url='https://example.org/fixture.mp4')),patch.object(reviews.subprocess,'check_output',return_value=json.dumps(dict(response=dict(message_ids_hex=['f'*64]))).encode()):
             packet=reviews.request(self.root,data,item,'r2','nostr',route,config,send=True)
         message=e.read(Path(item['directory'])/'reviews'/(packet['id']+'.send.json'))['text']
-        self.assertIn('Video participant p tags: '+'b'*64,message)
-        self.assertIn('Announcement mention p tags: '+'c'*64,message)
-        self.assertIn('Source reference: https://podcast.example.org/one',message)
-        self.assertIn('Hashtags: bitcoin',message)
-        self.assertIn('Required relays: wss://relay.example.org',message)
-        self.assertIn('Optional relays: wss://mirror.example.org',message)
+        self.assertIn('Video participants (Nostr keys): '+'b'*64,message)
+        self.assertIn('Announcement notifications (Nostr keys): '+'c'*64,message)
+        self.assertIn('Watch the full video preview (480p):',message)
+        details=packet['publication_details']
+        self.assertEqual(details['nostr_metadata']['source_url'],'https://podcast.example.org/one')
+        self.assertEqual(details['nostr_metadata']['hashtags'],['bitcoin'])
+        self.assertEqual(details['destinations']['required_publication_relays'],config['required_publication_relays'])
         incoming=dict(**route,sender='c'*64,message_id='d'*64,text='approve '+packet['id'],recorded_at=1,reply_to=None)
         reviews.accept(self.root,data,incoming)
         reviews.require(item,'nostr',r['nostr_manifest_sha256'],config)

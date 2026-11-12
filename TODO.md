@@ -1,6 +1,6 @@
 # TODO
 
-These are placeholders for later work. Reuse the existing operator workflows,
+Remaining work. Reuse the existing operator workflows,
 then port only the needed tools/skills after checking provenance, licenses and
 private configuration. Keep the implementation small and preserve existing
 operational guards. See [episode flow](docs/episode-flow.md) for what is already
@@ -18,48 +18,18 @@ implemented.
   episode list without creating duplicates or silently selecting source media.
   Reuse an existing reviewed transcript; use the local Whisper workflow if
   transcription or revision is needed.
-- [ ] Attach approved video references to that **same existing podcast episode**
-  and verify the hosting page/player/links. Preserve its audio enclosure, GUID,
-  publication date, transcript and unrelated metadata. Define the same handoff
-  for newly published podcast episodes after the raw-audio/transcript stages.
+- [ ] Define the video-reference handoff for newly published podcast episodes
+  after the raw-audio/transcript stages. Existing hosted episodes already have
+  verified native-video linkage that preserves their audio, transcript and identity.
 
-## Portable video production and publication tools
+## Remaining video workflow validation
 
-- [x] Port the complete renderer/layout, configurable private assets, measured
-  captions, chapters, explicit edited clocks, immutable feedback revisions and QA.
-- [x] Port verified AV1 ladder/independent fallback, stream-copy HLS, content
-  addressing, MIME/codec metadata and production signed video/announcement receipts.
-- [x] Add resumable private YouTube upload, thumbnail/metadata/caption handling,
-  processing/readback checks, private packet corrections and reviewed-ID public release.
-- [x] Require exact authenticated artifact/destination approvals and protected
-  maintenance checks for production writes. See [production](docs/production.md).
-- [ ] Configure user-maintained production controls and actual per-show destinations
-  for the separately authorized live test; keep writes closed during setup.
-
-## Resumption, review replies and completion notifications
-
-- [x] Add bounded background stage workers with durable terminal results and
-  Marmot completion/failure notifications. Notification recovery cannot repeat
-  production; no idle model polling or automatic paid inference resume.
-- [x] Pass incoming Marmot message/sender IDs through a pinned, tested upstream
-  bridge patch; verify against its authenticated timeline. Separate identical-text
-  replies are distinct turns, exact-ID replays cannot repeat effects, and approvals
-  bind the reviewed packet/route/destination/private video ID.
-- [ ] Verify the updated bridge/help/approval and completion-notice paths from the
-  phone in the real-episode test. Synthetic/fake transport tests passed; they do
-  not claim an independent human or full live provider validation.
-
-## First complete video workflow validation
-
-- [x] Port the video-stage production components needed for existing final
-  audio/transcript input. Synthetic rendering/packaging and transport recovery
-  fixtures are available. Raw-recording and hosting intake work stays separate.
-- [ ] With the next operator-selected video episode, test the complete Marmot
-  request/revision flow, draft upload, focused encrypted review clips, Nostr
-  publication/announcement, private YouTube review, explicit public approval
-  and protected draft cleanup. Recheck resume/recovery and exact artifact
-  records. Keep this pending until the episode and source material are supplied;
-  no idle model polling or scheduled test is needed while waiting.
+- [ ] With the next operator-selected video episode, validate updated help, the full-preview
+  link and revised final approval from the phone, an announcement-enabled release
+  and protected draft cleanup. The no-announcement Nostr → Castopod → YouTube
+  release and focused encrypted review clips have been exercised. Recheck
+  resume/recovery and exact artifact records for the remaining paths; keep this
+  idle until the operator selects an episode and supplies its source material.
 
 ## Editing a new episode from raw audio
 
@@ -76,13 +46,6 @@ implemented.
 
 ## Transcript production and Marmot feedback
 
-- [x] Resume transcript review on completed local jobs and authenticated exact-question
-  thumbs-up reactions using a separate token-free watcher. Preserve event IDs,
-  original episode sessions, task scope, busy/uncertain outcomes and send receipts.
-  This does not turn reactions into video publication approval.
-- [x] Port the existing Whisper transcription/review workflow. Preserve original
-  audio, word/cue timing, speaker attribution, source evidence and immutable raw
-  recognition. Keep hosted OpenAI transcription outside this work.
 - [ ] Preserve each subsequent transcript editorial revision as an immutable
   snapshot, with its review decisions and publication/correction receipt. The
   current pilot retains raw ASR, final hashes and logs; draft review files can
@@ -91,25 +54,11 @@ implemented.
   Use tracks reflecting the approved edits, or map raw-track results through the
   recorded edit timeline. Reconcile overlaps and cue timing against the final
   podcast mix; retain supplied speaker identities rather than guessing them.
-- [ ] Ask focused review questions in the episode's Marmot group, tied to an exact
-  transcript revision and audio/video interval. Accept voice-memo feedback:
-  retrieve/decrypt the attachment privately and transcribe it with the existing
-  Whisper tooling. Follow current upstream Marmot instructions for media access.
-- [ ] Record the question, authenticated reply/voice-memo reference, transcription,
-  interpretation and resulting correction. Handle late feedback without applying
-  it to the wrong episode/revision. Distinguish received feedback from reviewed
-  transcript changes; do not inherit another workflow's timeout/approval policy.
-
-## Transcript uploads
-
-- [x] Wire the transcript workflow to the shared Castopod attachment operations. Keep attaching
-  a transcript to an existing episode separate from publishing a narrated article
-  or creating a new episode. Require explicit show/episode identity.
-- [ ] Preserve reviewed words, edited/original timeline mapping, speaker labels,
-  formats and provenance. Record exact uploaded artifact hashes and receipts.
-- [x] Verify installed parser/model compatibility and actual public VTT/JSON,
-  episode-page and feed delivery. Preserve GUID, publication date, enclosure and
-  transcript associations. Inspect existing attachments before ambiguous retries.
+- [ ] Accept voice-memo feedback to transcript questions: retrieve/decrypt the
+  attachment privately and transcribe it with the existing Whisper tooling.
+  Extend the existing question/reply/correction records with the voice-memo
+  reference and transcription, preserving episode/revision routing and late
+  feedback handling. Follow upstream Marmot instructions for media access.
 
 ## Publishing a newly produced podcast episode
 
@@ -127,13 +76,6 @@ implemented.
 
 ## Castopod maintenance and new release tags
 
-- [x] Port the existing `castopod-maintenance` skill with configurable hosts,
-  paths, runtime, backup locations and operator-owned maintenance controls. Keep
-  instance records, credentials and deployment evidence outside this repository.
-- [x] Document a reusable **new-tag procedure**. Always start by checking whether
-  each required behavior/fix has already been merged upstream, and whether it is
-  actually present in the proposed release tag. A merged contribution on another
-  branch or a newer unreleased commit does not establish coverage in that tag.
 - [ ] Test upstream equivalents against the existing regression cases before
   deciding which local patches remain necessary. Omit superseded patches only
   after their behavior is validated; retain provenance and recovery material.
@@ -152,18 +94,6 @@ implemented.
 
 ## Other Castopod operations
 
-- [x] Port/adapt the existing `castopod-publishing` skill and its deterministic
-  helpers, including the Python SSH client (`scripts/publish.py`) and PHP
-  server-side helpers (`scripts/castopod/`). Document their installation,
-  runtime/access prerequisites and read-only list/inspect validation. They cover
-  inspecting/listing episodes, preparing drafts, creating/updating episodes,
-  replacing audio or show notes, attaching transcripts and verifying authorized
-  publication. The reusable client, server helper cohort, tests and installation
-  guide are now included; the original private/live setup is preserved during migration.
-- [x] Parameterize show/account/host/path defaults while preserving explicit
-  destination checks, dry-run/apply separation, shared mutation/per-episode locks,
-  maintenance pauses, remote-state inspection before retries and publication
-  authorization. Keep editorial/audio generation in its source workflow.
 - [ ] Roll out the reviewed helper cohort and maintenance state when
   the operator authorizes server installation. Validate a real disposable-instance
   mutation and the installed parser/public-readback path before enabling the new

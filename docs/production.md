@@ -20,8 +20,9 @@ service. It invokes the chosen model only for the initial assignment, newly
 completed episode jobs or consumed exact-packet approvals. It stays idle between
 events. The selected task and original authorization remain in private episode
 state. Place all long jobs under `EPISODE_DIRECTORY/jobs`; successful internal
-completions stay out of chat. Questions/previews use the verified White Noise
-route and encrypted attachments. `WAITING_FOR_JOB` / `WAITING_FOR_REVIEW` are
+completions stay out of chat. Focused questions use the verified White Noise
+route and encrypted attachments. Final review offers include the verified full
+Blossom MP4 preview link. `WAITING_FOR_JOB` / `WAITING_FOR_REVIEW` are
 internal final-answer markers when the relevant tool has already handled delivery.
 Human text replies resume the same episode context. Paused/blocked tasks stay
 idle, and failed/uncertain jobs require inspection rather than automatic retries.
@@ -333,6 +334,32 @@ review fallback, with the saved authorized request and tracked per-server receip
 Use `review_media.py fragment` plus the Marmot send helper for encrypted focused
 clips. Full draft and fragment transports retain the existing format checks.
 
+For a selected video assignment, stage the **complete registered fallback** with
+a `draft-upload` job before asking for final publication approval. Supply the
+actual episode request as `authorization`, and require `draft-upload` in the
+private maintenance control. This temporary Blossom preview is accessible to
+anyone with its link. It does not publish a Nostr event or upload to YouTube.
+Keep focused review clips as encrypted attachments.
+
+`reviews.py --send` requires a verified, tracked draft matching this revision's
+fallback hash, expected identity and configured draft server. It checks the saved
+full-byte/MIME/CORS/range evidence, then rechecks the exact `.mp4` URL with a bounded
+range request. A missing, deleted, stale or mismatched preview stops the offer
+before sending or superseding an earlier review. No arbitrary `--preview-url`
+or focused clip can stand in for the registered full video. A separate
+`youtube-public` offer instead links to the verified private YouTube video ID
+and channel belonging to that exact packet.
+
+The final message begins with the full watch link and lists what approval will
+do: Nostr/Nostube video, Castopod linkage where requested, private YouTube upload
+and public release when authorized. It says explicitly whether an announcement
+will be posted and shows its exact text when one is planned. Matching Nostr and
+YouTube descriptions appear once; differing metadata stays explicit. Exact
+artifact/configuration hashes, raw transport destinations and complete metadata
+remain in private review state, keeping the phone message readable. A short
+review token still binds the authenticated reply to this offer. An uncertain
+send requires receipt inspection; a confirmed offer is reused without resending.
+
 Adapt `examples/publication.json` into mode-0600 private configuration. Reuse the
 verified Nostr identity/relay/Blossom and YouTube OAuth setups. No credentials are
 embedded in this configuration; only references to their private files/runtimes.
@@ -348,7 +375,7 @@ for compatibility. Required relays establish the existing video-address state
 before signing and must return the exact signature-verified event after sending.
 Optional relays receive the same saved event, with bounded transport attempts;
 their failures are recorded as pending and do not stop Castopod or YouTube.
-The approval offer labels required and optional relays, and the configuration
+The saved review details label required and optional relays, and the configuration
 digest binds both lists. Saved events also bind the required-relay policy;
 changing it during an unfinished publication requires inspection and a fresh
 review, not silently weakening a failed stage.
