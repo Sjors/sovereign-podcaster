@@ -151,12 +151,3 @@ implementation tasks above:
   its project/tasks without a broad administrative credential or permission to
   change budgets. Distinguish delayed token estimates from billed amounts and
   report unknown usage honestly.
-
-## Future operator/executor separation
-
-- [ ] Explore an optional two-user setup. The operator could hold orchestration
-  authority and make temporary pre-operation backups that the executor cannot
-  overwrite or delete, protecting against accidental destructive actions. Define
-  restoration, retention/cleanup, minimum grants and practical UX before adding
-  this mode. The current supported runtime intentionally uses one `podcaster`
-  Unix user for both roles; this TODO does not introduce sudo approval per task.
