@@ -77,7 +77,23 @@ def events(item,task):
     for path in (Path(item['directory'])/'jobs').glob('*/job.json'):
         job=jobs.status(path.parent)
         if job['state'] in ('running','queued'):return []
-        if job['state'] in ('failed','interrupted'):raise RuntimeError('A video job failed or was interrupted; inspect its effects before continuing')
+        if job['state'] in ('failed','interrupted'):
+            request=job['request'];params=request.get('parameters',{});kind=request.get('kind')
+            revision=item.get('revisions',{}).get(params.get('revision'))
+            # A maintainer may finish an inspected partial publication using the
+            # same signed event/video ID. Its verified stage receipt resolves the
+            # old worker failure; preserve that failed job and its report intact.
+            if (kind in ('nostr','youtube-private','youtube-public') and revision and
+                    params.get('show')==item['show'] and params.get('episode')==item['episode'] and
+                    Path(params.get('root','')).resolve()==Path(item['directory']).parents[2].resolve() and
+                    Path(params.get('config','')).resolve()==Path(task['publication_config']).resolve() and
+                    e.digest(request)==job['request_sha256']):
+                sha=revision['nostr_manifest_sha256'] if kind=='nostr' else revision['manifest_sha256']
+                completed=e.published(item,kind,sha)
+                if completed and completed['receipt'].get('verified') is True:
+                    found.append('recovered-publication:'+e.digest(dict(path=str(path),stage=kind,manifest=sha,receipt=completed['receipt'])))
+                    continue
+            raise RuntimeError('A video job failed or was interrupted; inspect its effects before continuing')
         if job['state']=='completed':
             if job.get('exit_code')!=0 or e.digest(job['request'])!=job['request_sha256']:raise ValueError('Video job completion evidence changed')
             found.append('job:'+e.digest(dict(path=str(path),nonce=job['nonce'],request=job['request_sha256'])))

@@ -30,6 +30,22 @@ class VideoTasksTests(unittest.TestCase):
         self.job();self.once();self.once();self.assertEqual(self.run.call_count,2);self.deliver.assert_not_called()
     def test_unfinished_job_waits_without_model_calls(self):
         self.job('queued');self.once();self.run.assert_not_called();self.deliver.assert_not_called()
+    def test_failed_publication_can_resume_only_after_matching_verified_stage_recovery(self):
+        task=e.read(self.path);task['publication_config']=str(self.root/'publication.json');e.save(self.path,task)
+        with e.journal(Path(self.instance['work_root'])) as (_,data):
+            item=e.episode(data,'fixture','100');item['revisions']['r2']=dict(nostr_manifest_sha256='a'*64,manifest_sha256='b'*64)
+            item['publications'].append(dict(stage='nostr',manifest_sha256='a'*64,receipt=dict(verified=True,video_event_id='c'*64)))
+        request=dict(kind='nostr',parameters=dict(root=self.instance['work_root'],show='fixture',episode='100',revision='r2',config=task['publication_config']),apply=True)
+        path=e.private_root(self.path.parent/'jobs'/'recover')/'job.json'
+        e.save(path,dict(state='failed',request=request,request_sha256=e.digest(request),nonce='fixture',exit_code=1))
+        self.once();self.once();self.assertEqual(self.run.call_count,1);self.assertEqual(e.read(path)['state'],'failed')
+        item=e.read(Path(self.instance['work_root'])/'episodes.json')['episodes']['fixture/100']
+        self.assertTrue(any(x.startswith('recovered-publication:') for x in e.read(self.path)['handled_events']))
+        request['parameters']['config']=str(self.root/'foreign.json');job=e.read(path);job.update(request=request,request_sha256=e.digest(request));e.save(path,job)
+        with self.assertRaises(RuntimeError):v.events(item,e.read(self.path))
+    def test_failed_render_is_not_hidden_by_a_publication_receipt(self):
+        self.job('failed')
+        with self.assertRaises(RuntimeError):v.events(self.item,e.read(self.path))
     def test_exact_approval_wakes_and_old_approval_does_not_repeat(self):
         self.once()
         with e.journal(Path(self.instance['work_root'])) as (_,data):
