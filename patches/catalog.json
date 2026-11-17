@@ -139,30 +139,30 @@
     {
       "repository": "castopod",
       "branch": "2026/11/episode-video",
-      "commit": "ea8840e1c6513e780be76d1ef0577d2eb5dae51f",
-      "tree": "3094c2e2756ab6de18a4e5fa366204cfddb834eb",
+      "commit": "f23568dd0c3d61f2387dc640e6ec30f3b9666fc7",
+      "tree": "1c07d5ba21085fd4c5a794415d18630ae63ae671",
       "parents": [
-        "434fa28527faac4cd9d76e6f10537e8724edee16"
+        "9aee15e76e134f0d4b8a175539c298a91cc75d7c"
       ],
-      "signature_verified": false,
-      "author_date": "2026-11-17T17:51:54Z",
-      "committer_date": "2026-11-17T17:51:54Z",
+      "signature_verified": true,
+      "author_date": "2026-11-17T18:31:13Z",
+      "committer_date": "2026-11-17T18:31:13Z",
       "dependencies": [],
       "license": "AGPL-3.0",
       "base": "101022c6f4098e53fae58a8907dfa5681262ffa5",
       "checked_date_utc": "2026-11-17",
-      "published": false,
-      "state_note": "Prepared: adds the optional Podcasting 2.0 MP4 alternate enclosure. Publication has not been verified. last_published records the previously verified source.",
+      "published": true,
+      "state_note": "Owner published the signed commit. GitHub branch tip, tree, parent, UTC timestamps and message match the tested preparation.",
       "last_published": {
-        "commit": "434fa28527faac4cd9d76e6f10537e8724edee16",
-        "tree": "b2b4b1b9987d6ecaffacbca678d8ad2fb4def6f1",
+        "commit": "f23568dd0c3d61f2387dc640e6ec30f3b9666fc7",
+        "tree": "1c07d5ba21085fd4c5a794415d18630ae63ae671",
         "checked_date_utc": "2026-11-17"
       },
-      "preparation_commit": "ea8840e1c6513e780be76d1ef0577d2eb5dae51f",
+      "preparation_commit": "ee8916985d7b5d8f76b56d78071ec028beb8fd55",
       "preparation_parents": [
-        "434fa28527faac4cd9d76e6f10537e8724edee16"
+        "9aee15e76e134f0d4b8a175539c298a91cc75d7c"
       ],
-      "validation_note": "PHPUnit 49 tests/176 assertions, ECS, Rector and PHPStan on changed files, and an end-to-end CLI and feed check in an isolated container."
+      "validation_note": "PHPUnit 146 tests/662 assertions with the other deployed topics, ECS and PHPStan on changed files, and an end-to-end CLI and feed check (HLS then MP4) in an isolated container."
     },
     {
       "repository": "castopod",
@@ -316,27 +316,35 @@
     {
       "repository": "castopod",
       "branch": "2026/11/activitypub-off",
-      "commit": "2cc96d480ec9ebea5240f7420e289ec464276728",
-      "tree": "b2022084f4711d36fdf2ab30c9f8b8481826f369",
+      "commit": "2eb2236cd2cb033c4aa3582d805e840b11e9774e",
+      "tree": "f98f112f78c71cfe79ddfcac1141677bbe5002b0",
       "parents": [
-        "101022c6f4098e53fae58a8907dfa5681262ffa5"
+        "083e068f2666e6f2ff0654a1d551e48fa7c12211"
       ],
       "base": "101022c6f4098e53fae58a8907dfa5681262ffa5",
       "checked_date_utc": "2026-11-17",
-      "author_date": "2026-11-17T17:52:59Z",
-      "committer_date": "2026-11-17T17:52:59Z",
+      "author_date": "2026-11-17T18:31:52Z",
+      "committer_date": "2026-11-17T18:31:52Z",
       "dependencies": [],
       "license": "AGPL-3.0",
-      "signature_verified": false,
-      "published": false,
-      "state_note": "Prepared new topic; publication has not been verified.",
-      "preparation_commit": "2cc96d480ec9ebea5240f7420e289ec464276728",
-      "validation_note": "php -l on all changed files and a filter harness covering 42 federation and non-federation paths in an isolated container; PHPUnit not run."
+      "signature_verified": true,
+      "published": true,
+      "state_note": "Owner published the signed commit. GitHub branch tip, tree, parent, UTC timestamps and message match the tested preparation.",
+      "preparation_commit": "3d572af0ebb35efccda85e4d296645b096574c11",
+      "validation_note": "php -l, a 42-path filter harness, and a regression test for the Mastodon sign-up feed crash; PHPUnit 146 tests with the other deployed topics in an isolated container.",
+      "preparation_parents": [
+        "083e068f2666e6f2ff0654a1d551e48fa7c12211"
+      ],
+      "last_published": {
+        "commit": "2eb2236cd2cb033c4aa3582d805e840b11e9774e",
+        "tree": "f98f112f78c71cfe79ddfcac1141677bbe5002b0",
+        "checked_date_utc": "2026-11-17"
+      }
     },
     {
       "repository": "castopod",
       "branch": "2026/11/escape-avatar-urls",
-      "commit": "c83879456218bb392a2f9c54bee337e559f891c9",
+      "commit": "7c310c61695250b1e42d765f0b43a9fee176f9ec",
       "tree": "a760f8b3eb94089f664843246a824e324977ddaf",
       "parents": [
         "101022c6f4098e53fae58a8907dfa5681262ffa5"
@@ -347,11 +355,19 @@
       "committer_date": "2026-11-17T17:49:26Z",
       "dependencies": [],
       "license": "AGPL-3.0",
-      "signature_verified": false,
-      "published": false,
-      "state_note": "Prepared new topic; publication has not been verified.",
-      "preparation_commit": "c83879456218bb392a2f9c54bee337e559f891c9",
-      "validation_note": "php -l on all changed templates in an isolated container; one-line escaping changes."
+      "signature_verified": true,
+      "published": true,
+      "state_note": "Owner published the signed commit. GitHub branch tip, tree, parent, UTC timestamps and message match the tested preparation.",
+      "preparation_commit": "7c310c61695250b1e42d765f0b43a9fee176f9ec",
+      "validation_note": "php -l on all changed templates in an isolated container; one-line escaping changes.",
+      "preparation_parents": [
+        "101022c6f4098e53fae58a8907dfa5681262ffa5"
+      ],
+      "last_published": {
+        "commit": "7c310c61695250b1e42d765f0b43a9fee176f9ec",
+        "tree": "a760f8b3eb94089f664843246a824e324977ddaf",
+        "checked_date_utc": "2026-11-17"
+      }
     },
     {
       "repository": "nostube",
