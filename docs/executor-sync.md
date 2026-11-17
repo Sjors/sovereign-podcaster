@@ -76,6 +76,17 @@ server-wide receive setting, force push, tags or other branch refs are needed.
 Inspect both checkouts if a push is refused; preserve executor edits and reconcile
 them deliberately. A push is source synchronization, not a production deployment.
 
+Signing on the owner's machine replaces unsigned commits with signed ones that
+have the same trees but new hashes, so the executor's branch stops being an
+ancestor. Move it to the signed tip only when the executor checkout is clean and
+its `HEAD^{tree}` equals the tree of the corresponding signed commit. Push the
+signed tip to a temporary branch, run `git reset --keep` to it on the executor,
+then delete the temporary branch. If the trees differ, or the histories share no
+commit at all (for example after a history rewrite), first confirm that the
+executor holds no change missing from the new tip. Keep its current line as a
+`backup/...` branch, then move it the same way. Leave stashes and ignored files
+alone.
+
 Keep GitHub `origin` publication disabled on the Linux maintainer checkout. The
 private `podcaster` remote is an explicit exception to the no-GitHub-push rule.
 If needed, configure this checkout's `core.sshCommand` locally with the operator's
