@@ -87,7 +87,10 @@ class Av1Tests(unittest.TestCase):
     def test_independent_480_fallback_has_its_own_mime_dimensions_and_rate(self):
         bundle = dict(master_sha256='a' * 64, fallback_sha256='b' * 64,
                       assets=[dict(sha256='a' * 64, size=777), dict(sha256='b' * 64, size=12345)],
-                      variants=[dict(width=1280, height=720, duration=2438.9, codecs='av01.0.05M.08,mp4a.40.2')],
+                      variants=[dict(width=1280, height=720, duration=2438.9, codecs='av01.0.05M.08,mp4a.40.2',
+                                     average_bandwidth=251317),
+                                dict(width=854, height=480, duration=2438.9, codecs='av01.0.04M.08,mp4a.40.2',
+                                     average_bandwidth=180709)],
                       fallback=dict(width=854, height=480, duration=20.021333, average_bitrate=181618,
                                     codecs='av01.0.04M.08,mp4a.40.2'))
         tags = w.media_tags(bundle, ['https://server.test'])
@@ -97,6 +100,10 @@ class Av1Tests(unittest.TestCase):
         self.assertIn('dim 854x480', tags[1])
         self.assertIn('bitrate 181618', tags[1])
         self.assertNotIn('dim 1280x720', tags[1])
+        # The HLS entry is labelled by its highest rendition, so players don't show "Quality N".
+        self.assertIn('dim 1280x720', tags[0])
+        self.assertIn('bitrate 251317', tags[0])
+        self.assertNotIn('dim 854x480', tags[0])
         self.assertNotIn('avc1', str(tags))
 
     def test_handoff_rejects_stereo_or_wrong_codec(self):

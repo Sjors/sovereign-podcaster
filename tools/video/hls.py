@@ -138,7 +138,13 @@ def media_tags(bundle, servers):
         return result
     # The master declares exact CODECS per rendition. A bare playlist MIME also
     # works in clients that compare HLS MIME strings literally before using MSE.
-    hls = tag(bundle['master_sha256'], '.m3u8', HLS_MIME, bundle['variants'][0]['duration'])
+    top = bundle['variants'][0]  # prepare() sorts renditions by height, highest first
+    hls = tag(bundle['master_sha256'], '.m3u8', HLS_MIME, top['duration'])
+    # Players label their quality menu from dim; without it the stream shows as "Quality N".
+    if top.get('width') and top.get('height'):
+        hls.append(f'dim {top["width"]}x{top["height"]}')
+    if top.get('average_bandwidth'):
+        hls.append(f'bitrate {top["average_bandwidth"]}')
     mp4_mime = 'video/mp4' + (f'; codecs="{fallback["codecs"]}"' if 'codecs' in fallback else '')
     mp4 = tag(bundle['fallback_sha256'], '.mp4', mp4_mime, fallback['duration'])
     v = fallback
