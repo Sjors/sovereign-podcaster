@@ -139,16 +139,30 @@
     {
       "repository": "castopod",
       "branch": "2026/11/episode-video",
-      "commit": "434fa28527faac4cd9d76e6f10537e8724edee16",
-      "tree": "b2b4b1b9987d6ecaffacbca678d8ad2fb4def6f1",
+      "commit": "ea8840e1c6513e780be76d1ef0577d2eb5dae51f",
+      "tree": "3094c2e2756ab6de18a4e5fa366204cfddb834eb",
       "parents": [
-        "3486f52ba7b047adec02fe7e584201f124e2501a"
+        "434fa28527faac4cd9d76e6f10537e8724edee16"
       ],
-      "signature_verified": true,
-      "author_date": "2026-11-01T10:55:01Z",
-      "committer_date": "2026-11-01T10:55:01Z",
+      "signature_verified": false,
+      "author_date": "2026-11-17T17:51:54Z",
+      "committer_date": "2026-11-17T17:51:54Z",
       "dependencies": [],
-      "license": "AGPL-3.0"
+      "license": "AGPL-3.0",
+      "base": "101022c6f4098e53fae58a8907dfa5681262ffa5",
+      "checked_date_utc": "2026-11-17",
+      "published": false,
+      "state_note": "Prepared: adds the optional Podcasting 2.0 MP4 alternate enclosure. Publication has not been verified. last_published records the previously verified source.",
+      "last_published": {
+        "commit": "434fa28527faac4cd9d76e6f10537e8724edee16",
+        "tree": "b2b4b1b9987d6ecaffacbca678d8ad2fb4def6f1",
+        "checked_date_utc": "2026-11-17"
+      },
+      "preparation_commit": "ea8840e1c6513e780be76d1ef0577d2eb5dae51f",
+      "preparation_parents": [
+        "434fa28527faac4cd9d76e6f10537e8724edee16"
+      ],
+      "validation_note": "PHPUnit 49 tests/176 assertions, ECS, Rector and PHPStan on changed files, and an end-to-end CLI and feed check in an isolated container."
     },
     {
       "repository": "castopod",
@@ -298,6 +312,46 @@
       },
       "documentation_only_since": "711f2b94901291d292f405d6d19737db7a5313e7",
       "validation_note": "Reviewed Markdown and diff checks; no application tests rerun for documentation-only changes."
+    },
+    {
+      "repository": "castopod",
+      "branch": "2026/11/activitypub-off",
+      "commit": "2cc96d480ec9ebea5240f7420e289ec464276728",
+      "tree": "b2022084f4711d36fdf2ab30c9f8b8481826f369",
+      "parents": [
+        "101022c6f4098e53fae58a8907dfa5681262ffa5"
+      ],
+      "base": "101022c6f4098e53fae58a8907dfa5681262ffa5",
+      "checked_date_utc": "2026-11-17",
+      "author_date": "2026-11-17T17:52:59Z",
+      "committer_date": "2026-11-17T17:52:59Z",
+      "dependencies": [],
+      "license": "AGPL-3.0",
+      "signature_verified": false,
+      "published": false,
+      "state_note": "Prepared new topic; publication has not been verified.",
+      "preparation_commit": "2cc96d480ec9ebea5240f7420e289ec464276728",
+      "validation_note": "php -l on all changed files and a filter harness covering 42 federation and non-federation paths in an isolated container; PHPUnit not run."
+    },
+    {
+      "repository": "castopod",
+      "branch": "2026/11/escape-avatar-urls",
+      "commit": "c83879456218bb392a2f9c54bee337e559f891c9",
+      "tree": "a760f8b3eb94089f664843246a824e324977ddaf",
+      "parents": [
+        "101022c6f4098e53fae58a8907dfa5681262ffa5"
+      ],
+      "base": "101022c6f4098e53fae58a8907dfa5681262ffa5",
+      "checked_date_utc": "2026-11-17",
+      "author_date": "2026-11-17T17:49:26Z",
+      "committer_date": "2026-11-17T17:49:26Z",
+      "dependencies": [],
+      "license": "AGPL-3.0",
+      "signature_verified": false,
+      "published": false,
+      "state_note": "Prepared new topic; publication has not been verified.",
+      "preparation_commit": "c83879456218bb392a2f9c54bee337e559f891c9",
+      "validation_note": "php -l on all changed templates in an isolated container; one-line escaping changes."
     },
     {
       "repository": "nostube",

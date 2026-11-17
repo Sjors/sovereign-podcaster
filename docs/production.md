@@ -48,7 +48,12 @@ approved. A changed revision/destination still requires a new offer. The existin
 `--include-youtube-private` and separate exact-ID public review remain available.
 
 Use the installed Castopod `episodes:video` interface only after native storage
-and event readback. Preserve audio, native transcript, GUID, publication date,
+and event readback. Where the installed version supports it, also pass the
+highest-resolution standalone MP4 from the native receipt (`--mp4-url` with
+Blossom mirrors, `--mp4-sha256`, `--mp4-size`, `--mp4-height`, `--mp4-width`,
+`--mp4-bitrate`, `--mp4-codecs`). Castopod then lists it in RSS as a
+`podcast:alternateEnclosure` and drops it if the video identifier changes.
+Check the feed item afterwards. Preserve audio, native transcript, GUID, publication date,
 unrelated notes and existing identity; verify the public video tab/iframe.
 Save `castopod-link.json` beside `video-task.json`, binding `verified:true`,
 `manifest_sha256`, `video_event_id`, `identifier`, `episode_url` and before/after

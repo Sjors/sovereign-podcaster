@@ -29,11 +29,13 @@ the GitHub fork shares these maintained topics.
 | [2026/10/rss-byte-ranges](https://github.com/Sjors/castopod/commits/2026/10/rss-byte-ranges) | Serve byte ranges of generated RSS with correct lengths, UTF-8 offsets and unsatisfiable-range handling. | None |
 | [2026/11/sitemap](https://github.com/Sjors/castopod/commits/2026/11/sitemap) | List public pages, shows, episodes and available transcripts. Cache by origin; optionally apply domain selection. Includes adapted upstream [MR !375](https://code.castopod.org/adaures/castopod/-/merge_requests/375) with its authorship. | None |
 | [2026/11/transcript-indexing](https://github.com/Sjors/castopod/commits/2026/11/transcript-indexing) | Give real transcript pages their own canonical, title, description and WebPage metadata while retaining their PodcastEpisode association. | None |
-| [2026/11/episode-video](https://github.com/Sjors/castopod/commits/2026/11/episode-video) | Add optional contextual Nostr video metadata and Video / Audio / Comments tabs, retaining the normal player for other episodes. Includes paused-audio behavior and admin/CLI controls. | None |
+| [2026/11/episode-video](https://github.com/Sjors/castopod/commits/2026/11/episode-video) | Add optional contextual Nostr video metadata and Video / Audio / Comments tabs, retaining the normal player for other episodes. Includes paused-audio behavior and admin/CLI controls. Optionally advertise the video's Blossom MP4 in RSS as a Podcasting 2.0 `podcast:alternateEnclosure`. | None |
 | [2026/11/homepage-preview](https://github.com/Sjors/castopod/commits/2026/11/homepage-preview) | Configure homepage title, alternate name, visible introduction and WebSite identity. Optionally use the domain topic's hub identity. | None |
 | [2026/11/episode-seo](https://github.com/Sjors/castopod/commits/2026/11/episode-seo) | Backport episode/transcript title, escaping, Open Graph, document-language and embed indexing fixes. | `2026/11/transcript-indexing` |
 | [2026/11/web-cache-origins](https://github.com/Sjors/castopod/commits/2026/11/web-cache-origins) | Separate rendered pages, RSS and map-marker caches by origin while retaining shared model caches and cross-origin invalidation. | None |
 | [2026/11/podcast-domains](https://github.com/Sjors/castopod/commits/2026/11/podcast-domains) | Configure a hub identity and optional per-show web domains alongside nginx routing, preserving stored federation identity. | `2026/11/web-cache-origins` |
+| [2026/11/activitypub-off](https://github.com/Sjors/castopod/commits/2026/11/activitypub-off) | Turn off ActivityPub for a show whose audience and comments are on Nostr. Block federation endpoints before routing and caching, stop the broadcast task, and hide follow, comment and notification UI. Existing federation data is retained. | None |
+| [2026/11/escape-avatar-urls](https://github.com/Sjors/castopod/commits/2026/11/escape-avatar-urls) | Hardening: escape remote actor avatar URLs where admin and public templates print them in HTML attributes. | None |
 
 The [source snapshot](../../patches/catalog.json) records prepared and previously
 verified published revisions separately. Documentation-only updates awaiting
@@ -43,6 +45,11 @@ for dependency combinations and reproducible source checks.
 Integration branches are not publication units. Deployment state, instance
 configuration, inventories, approvals and rollback evidence stay in private
 maintenance records. Preparing or publishing a topic does not deploy it.
+
+The ActivityPub and video topics both add an episode Audio tab and view. When
+combining them, keep the video topic's audio player view and drop the comments
+and activity tabs. Alone, the ActivityPub topic shows the header player above an
+empty content area.
 
 The video topic requires matching rebuilt frontend assets, a static player and
 its route. Preserve these when installing compatible topics. The
